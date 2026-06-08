@@ -1,6 +1,5 @@
-package com.lihan.lazypizza.ui.theme
+package com.lihan.lazypizza.core.presentation.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -12,32 +11,42 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = PrimaryDark,
+    onPrimary = TextOnPrimaryDark,
+    background = BgDark,
+    onBackground = TextPrimaryDark,
+    surface = SurfaceHigherDark,
+    onSurface = TextPrimaryDark,
+    surfaceVariant = SurfaceHighestDark,
+    onSurfaceVariant = TextSecondaryDark,
+    outline = OutlineDark,
+    secondary = TextSecondaryDark,
+    onSecondary = TextPrimaryDark,
+    tertiary = SuccessDark,
+    onTertiary = TextPrimaryDark
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = PrimaryLight,
+    onPrimary = TextOnPrimaryLight,
+    background = BgLight,
+    onBackground = TextPrimaryLight,
+    surface = SurfaceHigherLight,
+    onSurface = TextPrimaryLight,
+    surfaceVariant = SurfaceHighestLight,
+    onSurfaceVariant = TextSecondaryLight,
+    outline = OutlineLight,
+    secondary = TextSecondaryLight,
+    onSecondary = TextOnPrimaryLight,
+    tertiary = SuccessLight,
+    onTertiary = TextOnPrimaryLight
 )
 
 @Composable
 fun LazyPizzaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // Set default to false to prioritize custom themed colors
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
