@@ -52,13 +52,15 @@ val ColorScheme.overlay: Color
 val ColorScheme.primaryGradient: Brush
     get() = if (isLight) {
         Brush.linearGradient(
-            colors = listOf(Color(0xFFF9966F), Color(0xFFF36B50))
+            colors = listOf(Color(0xFFF36B50),Color(0xFFF9966F), )
         )
     } else {
         Brush.linearGradient(
             colors = listOf(Color(0xFFFFAE9E), Color(0xFFFF8F7B))
         )
     }
+
+
 
 // Opacity variants
 val ColorScheme.textPrimary8: Color
