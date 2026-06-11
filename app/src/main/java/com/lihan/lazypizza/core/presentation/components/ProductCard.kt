@@ -53,7 +53,6 @@ fun ProductCard(
     onAddToCartClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -80,9 +79,12 @@ fun ProductCard(
                         )
                     )
                     .background(MaterialTheme.colorScheme.surfaceHighest)
-                    .size(120.dp)
+                    .size(120.dp),
+                contentAlignment = Alignment.Center
             ) {
-                //Image
+                AppAsyncImage(
+                    image = productUi.imageUrl
+                )
             }
             when (productUi.type) {
                 ProductType.Pizza -> {
@@ -103,7 +105,7 @@ fun ProductCard(
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis
                         )
-                        Spacer(Modifier.height(10.dp))
+                        Spacer(Modifier.weight(1f))
                         Text(
                             text = productUi.priceString,
                             style = MaterialTheme.typography.title1SemiBold,

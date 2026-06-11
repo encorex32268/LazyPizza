@@ -12,11 +12,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.body3Medium
+import com.lihan.lazypizza.core.presentation.ui.theme.surfaceHigher
 import com.lihan.lazypizza.menu.presentation.ProductType
 import com.lihan.lazypizza.menu.presentation.ProductType.Companion.toTypeName
 
 @Composable
 fun ProductTypeChip(
+    isSelected: Boolean,
     type: ProductType,
     onClick: (ProductType) -> Unit,
     modifier: Modifier = Modifier
@@ -25,7 +27,11 @@ fun ProductTypeChip(
         modifier = modifier,
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.outline),
         colors = SuggestionChipDefaults.suggestionChipColors(
-            containerColor = Color.Transparent,
+            containerColor = if (isSelected){
+                MaterialTheme.colorScheme.surfaceHigher
+            }else{
+                Color.Transparent
+            },
             labelColor = MaterialTheme.colorScheme.onBackground,
         ),
         onClick = {
@@ -49,6 +55,7 @@ fun ProductTypeChip(
 private fun ProductTypeChipPreview() {
     LazyPizzaTheme {
         ProductTypeChip(
+            isSelected = false,
             type = ProductType.entries.random(),
             onClick = {}
         )

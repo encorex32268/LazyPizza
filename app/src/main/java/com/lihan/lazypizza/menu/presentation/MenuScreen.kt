@@ -1,6 +1,7 @@
 package com.lihan.lazypizza.menu.presentation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +23,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,11 +59,24 @@ fun MenuScreen(
     onAction: (MenuAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    keyboard?.hide()
+                    focusManager.clearFocus()
+                })
+            },
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            MenuTopbar()
+            MenuTopbar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 10.dp)
+            )
         }
     ) {
         Column(
@@ -80,7 +97,7 @@ fun MenuScreen(
             )
             Spacer(Modifier.height(16.dp))
             ProductSearchbar(
-                textFieldState = TextFieldState(),
+                textFieldState = state.searchTextFieldState,
                 modifier = Modifier.fillMaxWidth()
             )
             Row(
@@ -90,9 +107,10 @@ fun MenuScreen(
             ) {
                 ProductType.entries.forEach { productType ->
                     ProductTypeChip(
+                        isSelected = productType in state.productTypes,
                         type = productType,
-                        onClick = {
-
+                        onClick = { productType ->
+                            onAction(MenuAction.OnProductTypeClick(productType))
                         }
                     )
                 }
@@ -119,17 +137,28 @@ fun MenuScreen(
                     ){ productUi ->
                         ProductCard(
                             productUi = productUi,
-                            onPlusClick = {},
-                            onMinusClick = {},
+                            onPlusClick = {
+                                onAction(MenuAction.OnPlusClick(productUi.id))
+                            },
+                            onMinusClick = {
+                                onAction(MenuAction.OnMinusClick(productUi.id))
+                            },
                             onItemClick = {
                                 if (productUi.type != ProductType.Pizza){
                                     return@ProductCard
                                 }
                             },
-                            onDeleteClick = {},
-                            onAddToCartClick = {},
+                            onDeleteClick = {
+                                onAction(MenuAction.OnDeleteClick(productUi.id))
+                            },
+                            onAddToCartClick = {
+                                onAction(MenuAction.OnAddToCartClick(productUi.id))
+                            },
                         )
                     }
+                }
+                item{
+                    Spacer(Modifier.height(120.dp))
                 }
             }
 

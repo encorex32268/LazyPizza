@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.lihan.lazypizza.core.domain.StoreProductRepository
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
+import com.lihan.lazypizza.menu.presentation.MenuRoot
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
@@ -22,23 +23,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        lifecycleScope.launch {
-            storeProductRepository.getProducts().collect {
-                println(">> ${it}")
-            }
-        }
-
-        lifecycleScope.launch {
-            storeProductRepository.getToppings().collect {
-                println("Toppings: ${it}")
-            }
-        }
-
         setContent {
             LazyPizzaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
-                }
+                MenuRoot()
             }
         }
     }

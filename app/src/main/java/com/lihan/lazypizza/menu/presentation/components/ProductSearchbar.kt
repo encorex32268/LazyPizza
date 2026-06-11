@@ -1,6 +1,7 @@
 package com.lihan.lazypizza.menu.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -95,6 +96,11 @@ fun ProductSearchbar(
         },
         modifier = modifier
             .clip(RoundedCornerShape(28.dp))
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(28.dp)
+            )
             .background(MaterialTheme.colorScheme.surfaceHigher)
             .dropShadow(
                 shape = RoundedCornerShape(28.dp),
