@@ -2,6 +2,7 @@ package com.lihan.lazypizza.core.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -56,8 +58,12 @@ fun ProductCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(120.dp),
-        onClick = onItemClick,
+            .height(120.dp)
+            .pointerInput(Unit){
+                detectTapGestures(onTap = {
+                    onItemClick()
+                })
+            },
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.surfaceHigher),
         colors = CardDefaults.cardColors(
