@@ -5,7 +5,10 @@ import androidx.room.RoomDatabase
 
 
 @Database(
-    entities = [ProductEntity::class, ToppingEntity::class],
+    entities = [
+        ProductEntity::class,
+        ToppingEntity::class
+    ],
     version = 1,
     exportSchema = false
 )
