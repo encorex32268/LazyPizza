@@ -1,11 +1,13 @@
 package com.lihan.lazypizza.menu.presentation
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -86,13 +88,12 @@ fun MenuScreen(
                     .padding(start = 16.dp, end = 10.dp)
             )
         }
-    ) {
+    ) { it -> it
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 16.dp)
+                .padding(top = it.calculateTopPadding())
         ) {
             Image(
                 modifier = Modifier
@@ -126,8 +127,11 @@ fun MenuScreen(
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(1),
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+
             ) {
                 state.items.forEach { (productType, productUis) ->
                     item {
@@ -165,7 +169,7 @@ fun MenuScreen(
                     }
                 }
                 item{
-                    Spacer(Modifier.height(120.dp))
+                    Spacer(Modifier.height(60.dp))
                 }
             }
 
