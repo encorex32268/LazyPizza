@@ -1,5 +1,10 @@
-package com.lihan.lazypizza.menu.presentation.product_detail 
+package com.lihan.lazypizza.menu.presentation.product_detail
+
+import com.lihan.lazypizza.menu.presentation.model.ProductUi
+import com.lihan.lazypizza.menu.presentation.model.ToppingUi
+
 data class ProductDetailState(
-    val paramOne: String = "default",
-    val paramTwo: List<String> = emptyList(),
+    val product: ProductUi? = null,
+    val toppings: List<ToppingUi> = emptyList(),
+    val totalString: String = ""
 )

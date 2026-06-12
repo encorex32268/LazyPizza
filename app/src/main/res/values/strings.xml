@@ -9,4 +9,7 @@
     <string name="product_delete_icon">ProductDeleteIcon</string>
     <string name="product_counter_minus">Minus</string>
     <string name="product_counter_plus">Plus</string>
+    <string name="back">back</string>
+    <string name="add_extra_toppings">ADD EXTRA TOPPINGS</string>
+    <string name="add_to_cart_for">Add to Cart for $%1$s</string>
 </resources>

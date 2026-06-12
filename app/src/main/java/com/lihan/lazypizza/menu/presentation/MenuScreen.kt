@@ -35,6 +35,7 @@ import com.lihan.lazypizza.R
 import com.lihan.lazypizza.core.presentation.components.ProductCard
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.label2SemiBold
+import com.lihan.lazypizza.core.presentation.util.ObserveAsEvents
 import com.lihan.lazypizza.menu.presentation.ProductType.Companion.toTypeName
 import com.lihan.lazypizza.menu.presentation.components.MenuTopbar
 import com.lihan.lazypizza.menu.presentation.components.ProductSearchbar
@@ -43,9 +44,16 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MenuRoot(
+    onNavigateToDetail: (String) -> Unit,
     viewModel: MenuViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(viewModel.uiEvent) { uiEvent ->
+        when(uiEvent){
+            is MenuUiEvent.OnNavigateToDetail -> onNavigateToDetail(uiEvent.id)
+        }
+    }
 
     MenuScreen(
         state = state,
@@ -131,9 +139,7 @@ fun MenuScreen(
                     }
                     items(
                         items = productUis,
-                        key = { productUi ->
-                            productUi.id
-                        }
+                        key = { productUi -> productUi.id }
                     ){ productUi ->
                         ProductCard(
                             productUi = productUi,
@@ -147,6 +153,7 @@ fun MenuScreen(
                                 if (productUi.type != ProductType.Pizza){
                                     return@ProductCard
                                 }
+                                onAction(MenuAction.OnPizzaClick(productUi.id))
                             },
                             onDeleteClick = {
                                 onAction(MenuAction.OnDeleteClick(productUi.id))

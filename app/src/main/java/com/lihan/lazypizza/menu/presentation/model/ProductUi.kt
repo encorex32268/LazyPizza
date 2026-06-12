@@ -1,5 +1,6 @@
 package com.lihan.lazypizza.menu.presentation.model
 
+import com.lihan.lazypizza.core.domain.formatToTwoDecimals
 import com.lihan.lazypizza.menu.presentation.ProductType
 import java.util.Locale.getDefault
 
@@ -14,12 +15,12 @@ data class ProductUi(
     val count: Int = if (isEditingMode) 1 else 0,
 ){
     val priceString: String
-        get() = "$${String.format(getDefault(),"%.2f", price)}"
+        get() = "$${price.formatToTwoDecimals()}"
 
     val priceTotal: String
         get() {
             val result = count * price
-            return "$${String.format(getDefault(),"%.2f", result)}"
+            return "$${result.formatToTwoDecimals()}"
         }
 
     val priceTotalDetail: String

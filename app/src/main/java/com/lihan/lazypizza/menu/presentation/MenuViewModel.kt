@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.lihan.lazypizza.core.domain.StoreProductRepository
 import com.lihan.lazypizza.menu.presentation.mapper.toUi
 import com.lihan.lazypizza.menu.presentation.model.ProductUi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,6 +24,9 @@ class MenuViewModel(
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
+
+    private val _uiEvent = Channel<MenuUiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     private val _originData = MutableStateFlow<List<ProductUi>>(emptyList())
 
@@ -64,6 +69,11 @@ class MenuViewModel(
             is MenuAction.OnMinusClick -> onMinusClick(action.id)
             is MenuAction.OnPlusClick -> onPlusClick(action.id)
             is MenuAction.OnProductTypeClick -> productTypeClick(action.type)
+            is MenuAction.OnPizzaClick -> {
+                viewModelScope.launch {
+                    _uiEvent.send(MenuUiEvent.OnNavigateToDetail(action.id))
+                }
+            }
         }
     }
 
