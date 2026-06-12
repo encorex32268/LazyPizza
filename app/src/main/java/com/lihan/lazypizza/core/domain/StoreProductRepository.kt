@@ -8,5 +8,7 @@ interface StoreProductRepository {
 
     suspend fun getProducts(): Flow<List<Product>>
 
+    suspend fun getPizzaById(id: String): Product?
+
     suspend fun getToppings(): Flow<List<Topping>>
 }

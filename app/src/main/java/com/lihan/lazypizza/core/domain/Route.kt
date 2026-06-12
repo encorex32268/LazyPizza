@@ -1,4 +1,13 @@
 package com.lihan.lazypizza.core.domain
 
-interface Route {
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed interface Route {
+
+    @Serializable
+    data object Menu: Route
+
+    @Serializable
+    data class ProductDetail(val id: String): Route
 }

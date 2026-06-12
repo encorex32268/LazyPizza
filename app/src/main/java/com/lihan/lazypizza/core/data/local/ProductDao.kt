@@ -15,8 +15,8 @@ interface ProductDao {
     @Query("SELECT * FROM ProductEntity")
     fun getProducts(): Flow<List<ProductEntity>>
 
-    @Query("SELECT * FROM ProductEntity WHERE category=:category")
-    fun getFilterProducts(category: String): Flow<List<ProductEntity>>
+    @Query("SELECT * FROM ProductEntity WHERE id=:id")
+    fun getProductById(id: String): Flow<ProductEntity?>
 
     @Transaction
     suspend fun upsertProductEntities(productEntities: List<ProductEntity>){

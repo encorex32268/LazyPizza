@@ -59,6 +59,11 @@ class OfflineFirstStoreProductRepository(
             }
     }
 
+    override suspend fun getPizzaById(id: String): Product?{
+        return productDao.getProductById(id).first()?.toDomain()
+
+    }
+
     override suspend fun getToppings(): Flow<List<Topping>> {
 
         val isDatabaseEmpty =toppingDao
