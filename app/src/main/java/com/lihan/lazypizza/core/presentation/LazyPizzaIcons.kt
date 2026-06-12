@@ -50,3 +50,12 @@ val Trash: ImageVector
 
 val User: ImageVector
     @Composable get() = ImageVector.vectorResource(R.drawable.user)
+
+val BookOpenFilled: ImageVector
+    @Composable get() = ImageVector.vectorResource(R.drawable.book_open_filled)
+
+val ShoppingCartFilled: ImageVector
+    @Composable get() = ImageVector.vectorResource(R.drawable.shopping_cart_filled)
+
+val ClockFilled: ImageVector
+    @Composable get() = ImageVector.vectorResource(R.drawable.clock_filled)
