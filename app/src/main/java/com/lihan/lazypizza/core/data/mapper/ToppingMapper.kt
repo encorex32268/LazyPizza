@@ -1,5 +1,6 @@
 package com.lihan.lazypizza.core.data.mapper
 
+import com.lihan.lazypizza.core.data.local.CartItemToppingEntity
 import com.lihan.lazypizza.core.data.local.ProductEntity
 import com.lihan.lazypizza.core.data.local.ToppingEntity
 import com.lihan.lazypizza.core.data.model.ProductDto
@@ -30,5 +31,17 @@ fun ToppingEntity.toDomain(): Topping {
         name = name,
         price = price,
         imageUrl = imageUrl
+    )
+}
+
+fun Topping.toEntity(
+    quantity: Int
+): CartItemToppingEntity {
+
+    return CartItemToppingEntity(
+        cartItemId = 0,
+        id = 0,
+        toppingId = id,
+        quantity = quantity,
     )
 }
