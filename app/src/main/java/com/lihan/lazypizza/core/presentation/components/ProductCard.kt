@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,19 +40,26 @@ import com.lihan.lazypizza.core.presentation.ui.theme.surfaceHighest
 import com.lihan.lazypizza.core.presentation.ui.theme.title1SemiBold
 import com.lihan.lazypizza.menu.presentation.MenuState
 import com.lihan.lazypizza.menu.presentation.ProductType
-import com.lihan.lazypizza.menu.presentation.components.BorderIconButton
-import com.lihan.lazypizza.menu.presentation.components.ItemCounter
 import com.lihan.lazypizza.menu.presentation.model.ProductUi
 
 @Composable
 fun ProductCard(
-    productUi: ProductUi,
+    modifier: Modifier = Modifier,
+    image: Any? = null,
+    description: String = "",
+    isEditingMode: Boolean = false,
+    type: ProductType,
+    name: String,
+    price: String,
+    quantity: Int,
+    totalPrice: String,
+    priceCalculate: String,
     onItemClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onMinusClick: () -> Unit,
     onPlusClick: () -> Unit,
     onAddToCartClick: () -> Unit,
-    modifier: Modifier = Modifier
+
 ) {
     Card(
         modifier = modifier
@@ -89,10 +95,10 @@ fun ProductCard(
                 contentAlignment = Alignment.Center
             ) {
                 AppAsyncImage(
-                    image = productUi.imageUrl
+                    image =image
                 )
             }
-            when (productUi.type) {
+            when (type) {
                 ProductType.Pizza -> {
                     Column(
                         modifier = Modifier
@@ -100,12 +106,12 @@ fun ProductCard(
                             .padding(vertical = 12.dp, horizontal = 16.dp)
                     ) {
                         Text(
-                            text = productUi.name,
+                            text = name,
                             style = MaterialTheme.typography.body1Medium,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                         Text(
-                            text = productUi.description,
+                            text = description,
                             style = MaterialTheme.typography.body3Regular,
                             color = MaterialTheme.colorScheme.secondary,
                             maxLines = 2,
@@ -113,7 +119,7 @@ fun ProductCard(
                         )
                         Spacer(Modifier.weight(1f))
                         Text(
-                            text = productUi.priceString,
+                            text =  price,
                             style = MaterialTheme.typography.title1SemiBold,
                             color = MaterialTheme.colorScheme.onBackground
                         )
@@ -123,7 +129,7 @@ fun ProductCard(
                 ProductType.Drinks,
                 ProductType.Sauces,
                 ProductType.IceCream -> {
-                    if (productUi.isEditingMode) {
+                    if (isEditingMode) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -134,7 +140,7 @@ fun ProductCard(
                             ) {
                                 Text(
                                     modifier = Modifier.weight(1f),
-                                    text = productUi.name,
+                                    text = name,
                                     style = MaterialTheme.typography.body1Medium,
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
@@ -156,7 +162,7 @@ fun ProductCard(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 ItemCounter(
-                                    count = productUi.count,
+                                    count = quantity,
                                     onMinusClick = onMinusClick,
                                     onPlusClick = onPlusClick
                                 )
@@ -165,12 +171,12 @@ fun ProductCard(
                                     horizontalAlignment = Alignment.End
                                 ){
                                     Text(
-                                        text = productUi.priceTotal,
+                                        text =  totalPrice,
                                         style = MaterialTheme.typography.title1SemiBold,
                                         color = MaterialTheme.colorScheme.onBackground
                                     )
                                     Text(
-                                        text = productUi.priceTotalDetail,
+                                        text = priceCalculate,
                                         style = MaterialTheme.typography.body4Regular,
                                         color = MaterialTheme.colorScheme.secondary
                                     )
@@ -184,7 +190,7 @@ fun ProductCard(
                                 .padding(vertical = 12.dp, horizontal = 16.dp)
                         ) {
                             Text(
-                                text = productUi.name,
+                                text = name,
                                 style = MaterialTheme.typography.body1Medium,
                                 color = MaterialTheme.colorScheme.onBackground
                             )
@@ -195,7 +201,7 @@ fun ProductCard(
                             ) {
                                 Text(
                                     modifier = Modifier.weight(1f),
-                                    text = productUi.priceString,
+                                    text =  price,
                                     style = MaterialTheme.typography.title1SemiBold,
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
@@ -222,8 +228,16 @@ private fun ProductCardPreview() {
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            val pizza = MenuState.fakeProductUiList.first()
             ProductCard(
-                productUi = MenuState.fakeProductUiList.first(),
+                image = pizza.imageUrl,
+                description = pizza.description,
+                type = pizza.type,
+                name = pizza.name,
+                price = pizza.priceString,
+                quantity = pizza.count,
+                totalPrice = pizza.priceTotal,
+                priceCalculate = pizza.priceTotalDetail,
                 onItemClick = {},
                 onDeleteClick = {},
                 onMinusClick = {},
@@ -231,11 +245,19 @@ private fun ProductCardPreview() {
                 onAddToCartClick = {}
             )
 
+            val drinkEditing = MenuState.fakeProductUiList
+                .first { it.type == ProductType.Drinks }
+                .copy(isEditingMode = true, count = 2)
             ProductCard(
-                productUi = MenuState.fakeProductUiList
-                    .filter { it.type == ProductType.Drinks}
-                    .first()
-                    .copy(isEditingMode = true),
+                image = drinkEditing.imageUrl,
+                description = drinkEditing.description,
+                isEditingMode = drinkEditing.isEditingMode,
+                type = drinkEditing.type,
+                name = drinkEditing.name,
+                price = drinkEditing.priceString,
+                quantity = drinkEditing.count,
+                totalPrice = drinkEditing.priceTotal,
+                priceCalculate = drinkEditing.priceTotalDetail,
                 onItemClick = {},
                 onDeleteClick = {},
                 onMinusClick = {},
@@ -243,11 +265,18 @@ private fun ProductCardPreview() {
                 onAddToCartClick = {}
             )
 
+            val drinkNormal = MenuState.fakeProductUiList
+                .first { it.type == ProductType.Drinks }
             ProductCard(
-                productUi =  MenuState.fakeProductUiList
-                    .filter { it.type == ProductType.Drinks}
-                    .first()
-                    .copy(isEditingMode = false),
+                image = drinkNormal.imageUrl,
+                description = drinkNormal.description,
+                isEditingMode = false,
+                type = drinkNormal.type,
+                name = drinkNormal.name,
+                price = drinkNormal.priceString,
+                quantity = drinkNormal.count,
+                totalPrice = drinkNormal.priceTotal,
+                priceCalculate = drinkNormal.priceTotalDetail,
                 onItemClick = {},
                 onDeleteClick = {},
                 onMinusClick = {},
