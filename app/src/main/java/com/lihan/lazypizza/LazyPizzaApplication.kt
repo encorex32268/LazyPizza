@@ -10,6 +10,7 @@ import coil3.memory.MemoryCache
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import com.google.firebase.FirebaseApp
+import com.lihan.lazypizza.cart.di.cartModule
 import com.lihan.lazypizza.core.di.coreModule
 import com.lihan.lazypizza.menu.di.menuModule
 import io.ktor.client.HttpClient
@@ -30,7 +31,8 @@ class LazyPizzaApplication: Application(), SingletonImageLoader.Factory{
             androidLogger(level = Level.DEBUG)
             modules(
                 coreModule,
-                menuModule
+                menuModule,
+                cartModule
             )
         }
     }

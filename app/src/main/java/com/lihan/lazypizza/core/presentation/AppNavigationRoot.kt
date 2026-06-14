@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.lihan.lazypizza.cart.presentation.CartRoot
 import com.lihan.lazypizza.menu.presentation.MenuRoot
 import com.lihan.lazypizza.menu.presentation.product_detail.ProductDetailRoot
 
@@ -98,14 +99,7 @@ fun AppNavigationRoot(
                 startDestination = Route.Cart
             ){
                 composable<Route.Cart>{
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ){
-                        Text(
-                            text = "Cart"
-                        )
-                    }
+                    CartRoot()
                 }
             }
 
