@@ -5,10 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
 import androidx.room.Upsert
-import com.lihan.lazypizza.core.domain.model.CartItemTopping
-import com.lihan.lazypizza.core.domain.model.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
@@ -98,11 +95,11 @@ interface CartDao {
 
     @Transaction
     @Query("SELECT * FROM cartitementity WHERE id = :cartId")
-    fun getCartWithToppingsListById(cartId: String): Flow<List<CartItemWithToppingsDB>>
+    fun getCartWithToppingsListById(cartId: String): Flow<List<CartItemWithToppingsCrossRef>>
 
     @Transaction
     @Query("SELECT * FROM cartitementity")
-    fun getCartWithToppingsList(): Flow<List<CartItemWithToppingsDB>>
+    fun getCartWithToppingsList(): Flow<List<CartItemWithToppingsCrossRef>>
 
 
     @Query("DELETE FROM cartitementity WHERE cartItemId = :cartItemId")

@@ -18,11 +18,11 @@ enum class ProductType {
         }
 
         fun fromString(category: String): ProductType {
-            return when(category){
+            return when(category.lowercase()){
                 "pizza" -> Pizza
-                "drink" -> Drinks
-                "ice_cream" -> IceCream
-                "sauce" -> Sauces
+                "drinks", "drink" -> Drinks
+                "ice cream", "ice_cream" -> IceCream
+                "sauces", "sauce" -> Sauces
                 else -> Pizza
             }
         }

@@ -3,7 +3,7 @@ package com.lihan.lazypizza.core.data.local
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class CartItemWithToppingsDB(
+data class CartItemWithToppingsCrossRef(
     @Embedded
     val cartItem: CartItemEntity,
 

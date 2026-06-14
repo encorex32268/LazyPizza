@@ -1,8 +1,8 @@
-package com.lihan.lazypizza.menu.presentation.components
+package com.lihan.lazypizza.core.presentation.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.core.presentation.Minus
 import com.lihan.lazypizza.core.presentation.Plus
-import com.lihan.lazypizza.core.presentation.Trash
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.title2
 
@@ -35,11 +34,18 @@ fun ItemCounter(
         verticalAlignment = Alignment.CenterVertically
     ) {
         BorderIconButton(
-            onClick = onMinusClick,
+            onClick = {
+                if (count <= 1) return@BorderIconButton
+                onMinusClick()
+            },
             content = {
                 Icon(
                     imageVector = Minus,
-                    tint = MaterialTheme.colorScheme.secondary,
+                    tint = if (count <= 1){
+                        MaterialTheme.colorScheme.outline
+                    }else{
+                        MaterialTheme.colorScheme.secondary
+                    },
                     contentDescription = stringResource(R.string.product_counter_minus)
                 )
             }
@@ -73,10 +79,19 @@ fun ItemCounter(
 @Composable
 private fun ItemCounterPreview() {
     LazyPizzaTheme {
-        ItemCounter(
-            count = 101,
-            onPlusClick = {},
-            onMinusClick = {}
-        )
+        Column {
+
+            ItemCounter(
+                count = 101,
+                onPlusClick = {},
+                onMinusClick = {}
+            )
+
+            ItemCounter(
+                count = 1,
+                onPlusClick = {},
+                onMinusClick = {}
+            )
+        }
     }
 }

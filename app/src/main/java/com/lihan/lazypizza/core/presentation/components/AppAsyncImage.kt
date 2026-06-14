@@ -43,7 +43,7 @@ fun AppAsyncImage(
                 contentAlignment = Alignment.Center
             ) {
                 CircularWavyProgressIndicator(
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(36.dp)
                 )
             }
         }
@@ -61,10 +61,9 @@ fun AppAsyncImage(
                 modifier = modifier,
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Search,
-                    contentDescription = null,
-                    tint = Color.Gray
+                Image(
+                    painter = painterResource(R.drawable.logo),
+                    contentDescription = null
                 )
             }
         }

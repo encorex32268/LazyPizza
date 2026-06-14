@@ -6,8 +6,10 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -64,7 +66,7 @@ fun ProductCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(IntrinsicSize.Min)
             .pointerInput(Unit){
                 detectTapGestures(onTap = {
                     onItemClick()
@@ -91,15 +93,83 @@ fun ProductCard(
                         )
                     )
                     .background(MaterialTheme.colorScheme.surfaceHighest)
-                    .size(120.dp),
+                    .fillMaxHeight(),
                 contentAlignment = Alignment.Center
             ) {
                 AppAsyncImage(
                     image =image
                 )
             }
-            when (type) {
-                ProductType.Pizza -> {
+
+            if (isEditingMode){
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp, horizontal = 16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = name,
+                            style = MaterialTheme.typography.body1Medium,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        BorderIconButton(
+                            onClick = onDeleteClick,
+                            content = {
+                                Icon(
+                                    imageVector = Trash,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    contentDescription = stringResource(R.string.product_delete_icon)
+                                )
+                            }
+                        )
+
+                    }
+                    Box(
+                        modifier = Modifier.weight(1f)
+                    ){
+                        if (description.isNotEmpty()){
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = description,
+                                style = MaterialTheme.typography.body3Regular,
+                                color = MaterialTheme.colorScheme.secondary,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ItemCounter(
+                            count = quantity,
+                            onMinusClick = onMinusClick,
+                            onPlusClick = onPlusClick
+                        )
+                        Spacer(Modifier.weight(1f))
+                        Column(
+                            horizontalAlignment = Alignment.End
+                        ){
+                            Text(
+                                text =  totalPrice,
+                                style = MaterialTheme.typography.title1SemiBold,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                            Text(
+                                text = priceCalculate,
+                                style = MaterialTheme.typography.body4Regular,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                        }
+                    }
+                }
+            }else{
+                if (type != ProductType.Pizza){
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -110,108 +180,51 @@ fun ProductCard(
                             style = MaterialTheme.typography.body1Medium,
                             color = MaterialTheme.colorScheme.onBackground
                         )
+                        Spacer(Modifier.weight(1f))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = Modifier.weight(1f),
+                                text =  price,
+                                style = MaterialTheme.typography.title1SemiBold,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                            AppButton(
+                                text = stringResource(R.string.add_to_cart),
+                                type = ButtonType.Outline,
+                                onClick = onAddToCartClick
+                            )
+                        }
+                    }
+                }else{
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp, horizontal = 16.dp)
+                    ) {
                         Text(
-                            text = description,
-                            style = MaterialTheme.typography.body3Regular,
-                            color = MaterialTheme.colorScheme.secondary,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
+                            text = name,
+                            style = MaterialTheme.typography.body1Medium,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
+                        if (description.isNotEmpty()){
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = description,
+                                style = MaterialTheme.typography.body3Regular,
+                                color = MaterialTheme.colorScheme.secondary,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
                         Spacer(Modifier.weight(1f))
                         Text(
                             text =  price,
                             style = MaterialTheme.typography.title1SemiBold,
                             color = MaterialTheme.colorScheme.onBackground
                         )
-                    }
-                }
-
-                ProductType.Drinks,
-                ProductType.Sauces,
-                ProductType.IceCream -> {
-                    if (isEditingMode) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 12.dp, horizontal = 16.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    modifier = Modifier.weight(1f),
-                                    text = name,
-                                    style = MaterialTheme.typography.body1Medium,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                                BorderIconButton(
-                                    onClick = onDeleteClick,
-                                    content = {
-                                        Icon(
-                                            imageVector = Trash,
-                                            tint = MaterialTheme.colorScheme.primary,
-                                            contentDescription = stringResource(R.string.product_delete_icon)
-                                        )
-                                    }
-                                )
-
-                            }
-                            Spacer(Modifier.weight(1f))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                ItemCounter(
-                                    count = quantity,
-                                    onMinusClick = onMinusClick,
-                                    onPlusClick = onPlusClick
-                                )
-                                Spacer(Modifier.weight(1f))
-                                Column(
-                                    horizontalAlignment = Alignment.End
-                                ){
-                                    Text(
-                                        text =  totalPrice,
-                                        style = MaterialTheme.typography.title1SemiBold,
-                                        color = MaterialTheme.colorScheme.onBackground
-                                    )
-                                    Text(
-                                        text = priceCalculate,
-                                        style = MaterialTheme.typography.body4Regular,
-                                        color = MaterialTheme.colorScheme.secondary
-                                    )
-                                }
-                            }
-                        }
-                    } else {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 12.dp, horizontal = 16.dp)
-                        ) {
-                            Text(
-                                text = name,
-                                style = MaterialTheme.typography.body1Medium,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                            Spacer(Modifier.weight(1f))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    modifier = Modifier.weight(1f),
-                                    text =  price,
-                                    style = MaterialTheme.typography.title1SemiBold,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                                AppButton(
-                                    text = stringResource(R.string.add_to_cart),
-                                    type = ButtonType.Outline,
-                                    onClick = onAddToCartClick
-                                )
-                            }
-                        }
                     }
                 }
             }
@@ -238,6 +251,26 @@ private fun ProductCardPreview() {
                 quantity = pizza.count,
                 totalPrice = pizza.priceTotal,
                 priceCalculate = pizza.priceTotalDetail,
+                onItemClick = {},
+                onDeleteClick = {},
+                onMinusClick = {},
+                onPlusClick = {},
+                onAddToCartClick = {}
+            )
+
+            ProductCard(
+                modifier = Modifier.height(138.dp),
+                image = pizza.imageUrl,
+                description = "" +
+                        "1 x Extra Cheese\n" +
+                        "1 x Pepperoni",
+                type = pizza.type,
+                name = pizza.name,
+                price = pizza.priceString,
+                quantity = pizza.count,
+                totalPrice = pizza.priceTotal,
+                priceCalculate = pizza.priceTotalDetail,
+                isEditingMode = true,
                 onItemClick = {},
                 onDeleteClick = {},
                 onMinusClick = {},

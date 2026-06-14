@@ -25,7 +25,7 @@ import com.lihan.lazypizza.core.presentation.ui.theme.body3Regular
 import com.lihan.lazypizza.core.presentation.ui.theme.primary8
 import com.lihan.lazypizza.core.presentation.ui.theme.surfaceHigher
 import com.lihan.lazypizza.core.presentation.ui.theme.title2
-import com.lihan.lazypizza.menu.presentation.components.ItemCounter
+import com.lihan.lazypizza.core.presentation.components.ItemCounter
 import com.lihan.lazypizza.menu.presentation.model.ToppingUi
 
 @Composable
