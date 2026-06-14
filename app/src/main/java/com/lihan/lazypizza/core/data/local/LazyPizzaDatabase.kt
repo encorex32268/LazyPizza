@@ -7,7 +7,9 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         ProductEntity::class,
-        ToppingEntity::class
+        ToppingEntity::class,
+        CartItemEntity::class,
+        CartItemToppingEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -15,4 +17,5 @@ import androidx.room.RoomDatabase
 abstract class LazyPizzaDatabase: RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun toppingDao(): ToppingDao
+    abstract fun cartDao(): CartDao
 }
