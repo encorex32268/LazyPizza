@@ -201,7 +201,9 @@ fun ProductDetailScreen(
                     .fillMaxWidth()
                     .padding(16.dp),
                 text = stringResource(R.string.add_to_cart_for,state.totalString),
-                onClick = {},
+                onClick = {
+                    onAction(ProductDetailAction.OnAddToCartClick)
+                },
                 type = ButtonType.Filled
             )
 
@@ -222,7 +224,7 @@ private fun Preview() {
                     description = "Tomato sauce, Mozzarella, Fresh basil, Olive oil",
                     imageUrl = "",
                     price = 12.1,
-                    type = ProductType.Pizza,
+                    category = ProductType.Pizza.name,
                     isEditingMode = false,
                     count = 1
                 ),

@@ -10,10 +10,13 @@ data class ProductUi(
     val description: String,
     val imageUrl: String,
     val price: Double,
-    val type: ProductType,
+    val category: String,
     val isEditingMode: Boolean = false,
     val count: Int = if (isEditingMode) 1 else 0,
 ){
+    val type: ProductType
+        get() = ProductType.fromString(category)
+
     val priceString: String
         get() = "$${price.formatToTwoDecimals()}"
 

@@ -3,7 +3,11 @@ package com.lihan.lazypizza.menu.presentation
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lihan.lazypizza.core.domain.CartRepository
 import com.lihan.lazypizza.core.domain.StoreProductRepository
+import com.lihan.lazypizza.core.domain.UserDataStore
+import com.lihan.lazypizza.menu.presentation.mapper.toCartItem
+import com.lihan.lazypizza.menu.presentation.mapper.toDomain
 import com.lihan.lazypizza.menu.presentation.mapper.toUi
 import com.lihan.lazypizza.menu.presentation.model.ProductUi
 import kotlinx.coroutines.channels.Channel
@@ -20,7 +24,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MenuViewModel(
-    private val storeProductRepository: StoreProductRepository
+    private val storeProductRepository: StoreProductRepository,
+    private val cartRepository: CartRepository,
+    private val userDataStore: UserDataStore
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -30,17 +36,33 @@ class MenuViewModel(
 
     private val _originData = MutableStateFlow<List<ProductUi>>(emptyList())
 
-    private val _state = MutableStateFlow(MenuState())
-
     private val searchText = snapshotFlow {
         _state.value.searchTextFieldState.text.toString()
     }
 
+    private val _state = MutableStateFlow(MenuState())
     val state = combine(
         _originData,
         _state.map { it.productTypes }.distinctUntilChanged(),
         searchText
     ) { originData, productTypes, query ->
+
+        val orderId = userDataStore.getOrderId().first()
+        val orderProducts = originData
+            .filter { productUi -> productUi.isEditingMode }
+            .map { productUi ->
+                val newProductUi =  productUi.toCartItem(orderId)
+                newProductUi
+            }
+
+        orderProducts.forEach { cartItem ->
+            cartRepository.insertCartItemWithToppings(
+                cartItem = cartItem,
+                cartTopping = emptyList()
+            )
+        }
+
+
         _state.value.copy(
             productUiList = originData.filter { product ->
                 val matchesType = productTypes.isEmpty() || product.type in productTypes
@@ -49,9 +71,12 @@ class MenuViewModel(
             },
             productTypes = productTypes
         )
+
+
     }.onStart {
             if (!hasLoadedInitialData) {
                 initData()
+                checkUserStatus()
                 hasLoadedInitialData = true
             }
         }
@@ -76,6 +101,17 @@ class MenuViewModel(
             }
         }
     }
+
+    //Check user isOrdering or not
+    private fun checkUserStatus() {
+        viewModelScope.launch {
+            val isOrdering = userDataStore.getIsOrdering().first()
+            if (!isOrdering){
+                userDataStore.setIsOrdering(true)
+            }
+        }
+    }
+
 
     private fun initData() {
         viewModelScope.launch {

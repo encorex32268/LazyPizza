@@ -5,4 +5,5 @@ sealed interface ProductDetailAction {
     data class OnMinusClick(val id: String): ProductDetailAction
     data class OnItemClick(val id: String): ProductDetailAction
     data object OnBack: ProductDetailAction
+    data object OnAddToCartClick: ProductDetailAction
 }

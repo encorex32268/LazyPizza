@@ -4,9 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.lihan.lazypizza.core.domain.CartRepository
 import com.lihan.lazypizza.core.presentation.Route
 import com.lihan.lazypizza.core.domain.StoreProductRepository
+import com.lihan.lazypizza.core.domain.UserDataStore
 import com.lihan.lazypizza.core.domain.formatToTwoDecimals
+import com.lihan.lazypizza.menu.presentation.mapper.toCartItem
+import com.lihan.lazypizza.menu.presentation.mapper.toCartItemTopping
 import com.lihan.lazypizza.menu.presentation.mapper.toUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +28,9 @@ import kotlinx.coroutines.launch
 
 class ProductDetailViewModel(
     private val storeProductRepository: StoreProductRepository,
-    private val savedStateHandle: SavedStateHandle
+    private val cartRepository: CartRepository,
+    private val savedStateHandle: SavedStateHandle,
+    private val userDataStore: UserDataStore,
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -82,6 +88,27 @@ class ProductDetailViewModel(
             is ProductDetailAction.OnMinusClick -> onMinusClick(action.id)
             is ProductDetailAction.OnPlusClick -> onPlusClick(action.id)
             is ProductDetailAction.OnItemClick -> onItemClick(action.id)
+            ProductDetailAction.OnAddToCartClick -> addToCart()
+        }
+    }
+
+    private fun addToCart(){
+        viewModelScope.launch {
+            val currentState = state.value
+            val product = currentState.product
+            if (product == null){
+                _uiEvent.send(ProductDetailUiEvent.OnBack)
+                return@launch
+            }
+            val toppings = currentState.toppings.filter { toppingUi -> toppingUi.isEditingMode }
+            val orderId = userDataStore.getOrderId().first()
+
+            cartRepository.insertCartItemWithToppings(
+                cartItem = product.toCartItem(orderId),
+                cartTopping = toppings.map { it.toCartItemTopping() }
+            )
+            _uiEvent.send(ProductDetailUiEvent.OnBack)
+
         }
     }
 
@@ -174,4 +201,5 @@ class ProductDetailViewModel(
             }
         }.launchIn(viewModelScope)
     }
+
 }
