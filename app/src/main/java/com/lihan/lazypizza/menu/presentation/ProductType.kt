@@ -5,7 +5,7 @@ import androidx.compose.ui.res.stringResource
 import com.lihan.lazypizza.R
 
 enum class ProductType {
-    Pizza,Drinks,Sauces,IceCream;
+    Pizza,Drinks,Sauces,IceCream,Other;
     companion object{
         @Composable
         fun ProductType.toTypeName(): String {
@@ -14,6 +14,7 @@ enum class ProductType {
                 Drinks -> stringResource(R.string.drinks)
                 Sauces -> stringResource(R.string.sauces)
                 IceCream -> stringResource(R.string.ice_cream)
+                else -> ""
             }
         }
 

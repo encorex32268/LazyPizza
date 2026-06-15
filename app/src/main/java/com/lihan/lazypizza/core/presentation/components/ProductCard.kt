@@ -137,7 +137,6 @@ fun ProductCard(
                                 text = description,
                                 style = MaterialTheme.typography.body3Regular,
                                 color = MaterialTheme.colorScheme.secondary,
-                                maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
@@ -212,10 +211,10 @@ fun ProductCard(
                         if (description.isNotEmpty()){
                             Spacer(Modifier.height(4.dp))
                             Text(
+                                modifier = Modifier.fillMaxWidth(),
                                 text = description,
                                 style = MaterialTheme.typography.body3Regular,
                                 color = MaterialTheme.colorScheme.secondary,
-                                maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
@@ -259,11 +258,12 @@ private fun ProductCardPreview() {
             )
 
             ProductCard(
-                modifier = Modifier.height(138.dp),
                 image = pizza.imageUrl,
                 description = "" +
                         "1 x Extra Cheese\n" +
-                        "1 x Pepperoni",
+                        "1 x Pepperoni\n" +
+                        "1 x Pepperoni\n" +
+                        "1 x Pepperoni\n",
                 type = pizza.type,
                 name = pizza.name,
                 price = pizza.priceString,
