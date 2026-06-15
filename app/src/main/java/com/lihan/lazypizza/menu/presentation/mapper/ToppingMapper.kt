@@ -17,6 +17,8 @@ fun ToppingUi.toCartItemTopping(): CartItemTopping{
     return CartItemTopping(
         cartItemId = 0,
         toppingId = id,
-        quantity = count
+        quantity = count,
+        name = name,
+        price =  price
     )
 }

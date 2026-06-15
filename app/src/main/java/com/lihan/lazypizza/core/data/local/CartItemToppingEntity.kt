@@ -15,5 +15,7 @@ data class CartItemToppingEntity(
     val id: Long = 0,
     val cartItemId: Long,
     val toppingId: String,
-    val quantity: Int
+    val quantity: Int,
+    val name: String,
+    val price: Double
 )

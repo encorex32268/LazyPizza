@@ -43,5 +43,7 @@ fun Topping.toEntity(
         id = 0,
         toppingId = id,
         quantity = quantity,
+        name = name,
+        price = price
     )
 }

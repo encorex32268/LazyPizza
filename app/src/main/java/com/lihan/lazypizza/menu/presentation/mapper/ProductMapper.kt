@@ -33,6 +33,9 @@ fun ProductUi.toCartItem(createdId: Int): CartItem {
         cartItemId = null,
         id = createdId,
         productId = id,
-        quantity = 1
+        quantity = 1,
+        name = name,
+        price = price,
+        imageUrl = imageUrl
     )
 }

@@ -9,9 +9,13 @@ import com.lihan.lazypizza.core.domain.model.CartItemWithToppings
 
 fun CartItemEntity.toDomain(): CartItem {
     return CartItem(
+        cartItemId = cartItemId,
         id =id,
         productId = productId,
-        quantity = quantity
+        quantity = quantity,
+        name = name,
+        price = price,
+        imageUrl = imageUrl
     )
 }
 
@@ -19,7 +23,10 @@ fun CartItem.toEntity(): CartItemEntity {
     return CartItemEntity(
         id =id,
         productId = productId,
-        quantity = quantity
+        quantity = quantity,
+        name = name,
+        price = price,
+        imageUrl = imageUrl
     )
 }
 
@@ -27,7 +34,9 @@ fun CartItemToppingEntity.toDomain(): CartItemTopping {
     return CartItemTopping(
         cartItemId = cartItemId,
         toppingId = toppingId,
-        quantity = quantity
+        quantity = quantity,
+        price = price,
+        name = name
     )
 }
 
@@ -35,7 +44,9 @@ fun CartItemTopping.toEntity(): CartItemToppingEntity{
     return CartItemToppingEntity(
         cartItemId = cartItemId,
         toppingId = toppingId,
-        quantity = quantity
+        quantity = quantity,
+        name = name,
+        price = price
     )
 }
 

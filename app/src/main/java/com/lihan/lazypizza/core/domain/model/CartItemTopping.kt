@@ -3,5 +3,7 @@ package com.lihan.lazypizza.core.domain.model
 data class CartItemTopping(
     val cartItemId: Long,
     val toppingId: String,
-    val quantity: Int
+    val quantity: Int,
+    val name: String,
+    val price: Double,
 )
