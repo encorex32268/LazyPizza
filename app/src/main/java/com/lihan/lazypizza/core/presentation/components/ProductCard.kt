@@ -49,18 +49,18 @@ fun ProductCard(
     modifier: Modifier = Modifier,
     image: Any? = null,
     description: String = "",
+    price: String = "",
     isEditingMode: Boolean = false,
+    onItemClick: (() -> Unit)?=null,
+    onAddToCartClick: (() -> Unit)?=null,
     type: ProductType,
     name: String,
-    price: String,
     quantity: Int,
     totalPrice: String,
     priceCalculate: String,
-    onItemClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onMinusClick: () -> Unit,
     onPlusClick: () -> Unit,
-    onAddToCartClick: () -> Unit,
 
 ) {
     Card(
@@ -69,7 +69,7 @@ fun ProductCard(
             .height(IntrinsicSize.Min)
             .pointerInput(Unit){
                 detectTapGestures(onTap = {
-                    onItemClick()
+                    onItemClick?.invoke()
                 })
             },
         shape = RoundedCornerShape(12.dp),
@@ -193,7 +193,9 @@ fun ProductCard(
                             AppButton(
                                 text = stringResource(R.string.add_to_cart),
                                 type = ButtonType.Outline,
-                                onClick = onAddToCartClick
+                                onClick = {
+                                    onAddToCartClick?.invoke()
+                                }
                             )
                         }
                     }
