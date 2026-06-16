@@ -34,4 +34,12 @@ class DefaultCartRepository(
            }
        }
     }
+
+    override suspend fun updateCartItemQuantity(cartItemId: Long, quantity: Int) {
+        cartDao.updateCartItemQuantity(cartItemId,quantity)
+    }
+
+    override suspend fun deleteCartItem(cartItemId: Long) {
+        cartDao.deleteCartItemById(cartItemId)
+    }
 }

@@ -1,6 +1,7 @@
 package com.lihan.lazypizza.core.data.local
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 //Id	CartItemId	toppingId	Quantity
@@ -9,7 +10,16 @@ import androidx.room.PrimaryKey
 //1		2	“topping_1”		3
 //1		2	“topping_4”		2
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = CartItemEntity::class,
+            parentColumns = ["cartItemId"],
+            childColumns = ["cartItemId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class CartItemToppingEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

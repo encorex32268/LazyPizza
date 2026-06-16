@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -26,10 +27,14 @@ interface CartDao {
     @Query("SELECT * From CartItemEntity WHERE productId =:productId")
     suspend fun getCartItemByProductId(productId: String): CartItemEntity?
 
-
     @Query("SELECT * From CartItemToppingEntity WHERE cartItemId =:cartItemId")
     fun getCartItemToppingByCartItemId(cartItemId: Long): Flow<List<CartItemToppingEntity>>
 
+    @Query("UPDATE cartitementity SET quantity =:quantity WHERE cartItemId =:cartItemId")
+    suspend fun updateCartItemQuantity(cartItemId: Long,quantity: Int)
+
+    @Query("DELETE FROM cartitementity WHERE cartItemId = :cartItemId")
+    suspend fun deleteCartItemById(cartItemId: Long)
 
     @Transaction
     suspend fun insertCartItemWithToppings(
@@ -102,8 +107,7 @@ interface CartDao {
     fun getCartWithToppingsList(): Flow<List<CartItemWithToppingsCrossRef>>
 
 
-    @Query("DELETE FROM cartitementity WHERE cartItemId = :cartItemId")
-    suspend fun deleteCartItemById(cartItemId: Long)
+
 
     /**
      * 清空整個購物車

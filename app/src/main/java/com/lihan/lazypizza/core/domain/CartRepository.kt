@@ -16,4 +16,9 @@ interface CartRepository {
 
     fun getCartItems(): Flow<List<CartItemWithToppings>>
 
+    suspend fun updateCartItemQuantity(cartItemId: Long, quantity: Int)
+
+    suspend fun deleteCartItem(cartItemId: Long)
+
+
 }

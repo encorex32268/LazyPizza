@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.tasks.await
+import kotlin.collections.map
 import kotlin.coroutines.coroutineContext
 
 class OfflineFirstStoreProductRepository(
@@ -54,6 +55,14 @@ class OfflineFirstStoreProductRepository(
 
         return productDao
             .getProducts()
+            .map { productEntities ->
+                productEntities.map { it.toDomain() }
+            }
+    }
+
+    override suspend fun getRecommendProducts(): Flow<List<Product>> {
+        return productDao
+            .getRecommendProducts()
             .map { productEntities ->
                 productEntities.map { it.toDomain() }
             }
