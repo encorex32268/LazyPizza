@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -29,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
+import androidx.compose.ui.unit.min
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.core.presentation.Plus
 import com.lihan.lazypizza.core.presentation.components.AppAsyncImage
@@ -47,13 +50,11 @@ fun RecommendProductCard(
     image: Any?,
     name: String,
     price: String,
+    onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier
-            .widthIn(max = 160.dp)
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.surfaceHigher),
         colors = CardDefaults.cardColors(
@@ -64,6 +65,7 @@ fun RecommendProductCard(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .weight(1f)
                 .padding(1.dp)
                 .clip(
                     RoundedCornerShape(
@@ -71,8 +73,7 @@ fun RecommendProductCard(
                         topEnd = 12.dp
                     )
                 )
-                .background(MaterialTheme.colorScheme.surfaceHighest)
-                .padding(26.dp),
+                .background(MaterialTheme.colorScheme.surfaceHighest),
             contentAlignment = Alignment.Center
         ) {
             AppAsyncImage(
@@ -80,11 +81,13 @@ fun RecommendProductCard(
             )
         }
         Column(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
                 text = name,
+                maxLines = 1,
                 style = MaterialTheme.typography.body1Regular,
                 color = MaterialTheme.colorScheme.secondary
             )
@@ -99,7 +102,7 @@ fun RecommendProductCard(
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 BorderIconButton(
-                    onClick = {},
+                    onClick = onAddClick,
                     content = {
                         Icon(
                             imageVector = Plus,
@@ -121,7 +124,8 @@ private fun RecommendProductCardPreview() {
         RecommendProductCard(
             image = null,
             name = "BBQ Sauce",
-            price = "$0.59"
+            price = "$0.59",
+            onAddClick = {}
         )
     }
 }
