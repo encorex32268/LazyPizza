@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.lihan.lazypizza.cart.presentation.CartRoot
+import com.lihan.lazypizza.history.presentation.HistoryRoot
 import com.lihan.lazypizza.menu.presentation.MenuRoot
 import com.lihan.lazypizza.menu.presentation.product_detail.ProductDetailRoot
 
@@ -99,7 +100,17 @@ fun AppNavigationRoot(
                 startDestination = Route.Cart
             ){
                 composable<Route.Cart>{
-                    CartRoot()
+                    CartRoot(
+                        onBackToMenu = {
+                            navController.navigate(Route.Menu){
+                                popUpTo(Route.Menu) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
                 }
             }
 
@@ -107,14 +118,7 @@ fun AppNavigationRoot(
                 startDestination = Route.History
             ){
                 composable<Route.History>{
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ){
-                        Text(
-                            text = "History"
-                        )
-                    }
+                    HistoryRoot()
                 }
             }
         }
