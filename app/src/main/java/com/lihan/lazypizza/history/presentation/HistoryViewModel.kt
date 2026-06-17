@@ -2,12 +2,18 @@ package com.lihan.lazypizza.history.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lihan.lazypizza.core.domain.UserDataStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
-class HistoryViewModel : ViewModel() {
+class HistoryViewModel(
+    private val userDataStore: UserDataStore
+): ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -15,7 +21,7 @@ class HistoryViewModel : ViewModel() {
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                /** Load initial data here **/
+                observeUserStatus()
                 hasLoadedInitialData = true
             }
         }
@@ -29,6 +35,18 @@ class HistoryViewModel : ViewModel() {
         when (action) {
             else -> TODO("Handle actions")
         }
+    }
+
+    private fun observeUserStatus(){
+        //TODO Combine HistoryData and UserDataStore
+        userDataStore
+            .getUserPhoneNumber()
+            .onEach { phoneNumber ->
+                _state.update { it.copy(
+                    isSignIn = phoneNumber.isNotEmpty()
+                ) }
+            }
+            .launchIn(viewModelScope)
     }
 
 }

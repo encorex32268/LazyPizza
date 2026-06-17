@@ -1,6 +1,6 @@
 package com.lihan.lazypizza.history.presentation
 
 data class HistoryState(
-    val paramOne: String = "default",
-    val paramTwo: List<String> = emptyList(),
+    val items: List<String> = emptyList(),
+    val isSignIn: Boolean = false
 )

@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.androidx.compose.koinViewModel
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.core.presentation.components.PlaceholderView
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
@@ -29,7 +29,7 @@ import com.lihan.lazypizza.core.presentation.ui.theme.body1Medium
 
 @Composable
 fun HistoryRoot(
-    viewModel: HistoryViewModel = viewModel()
+    viewModel: HistoryViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -71,17 +71,35 @@ fun HistoryScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            PlaceholderView(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 120.dp),
-                title = stringResource(R.string.history_is_empty_title),
-                content = stringResource(R.string.history_is_empty_content),
-                buttonText = stringResource(R.string.sign_in),
-                onClick = {
+            when{
+                !state.isSignIn ->{
+                    PlaceholderView(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 120.dp),
+                        title = stringResource(R.string.history_is_empty_title),
+                        content = stringResource(R.string.history_is_empty_content),
+                        buttonText = stringResource(R.string.sign_in),
+                        onClick = {
 
+                        }
+                    )
                 }
-            )
+                state.items.isEmpty() -> {
+                    PlaceholderView(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 120.dp),
+                        title = stringResource(R.string.history_is_empty_title),
+                        content = stringResource(R.string.history_is_empty_content),
+                        buttonText = stringResource(R.string.sign_in),
+                        onClick = {
+
+                        }
+                    )
+                }
+            }
+
         }
     }
 }
