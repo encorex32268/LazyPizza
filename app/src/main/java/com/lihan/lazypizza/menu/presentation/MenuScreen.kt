@@ -30,11 +30,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.core.domain.formatToTwoDecimals
+import com.lihan.lazypizza.core.presentation.components.AppDialog
 import com.lihan.lazypizza.core.presentation.components.ProductCard
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.label2SemiBold
@@ -86,7 +88,11 @@ fun MenuScreen(
             MenuTopbar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 10.dp)
+                    .padding(start = 16.dp, end = 10.dp),
+                phoneNumber = state.phoneNumber,
+                onLogOut = {
+                    onAction(MenuAction.OnShowLogOut)
+                }
             )
         }
     ) { it -> it
@@ -184,6 +190,19 @@ fun MenuScreen(
 
         }
     }
+    if (state.isShowLogOutDialog){
+        AppDialog(
+            title = stringResource(R.string.log_out_dialog_title),
+            onDismiss = {
+                onAction(MenuAction.OnDismissLogOutClick)
+            },
+            onConfirmClick = {
+                onAction(MenuAction.OnLogOutConfirmClick)
+            },
+            dismissButtonText = stringResource(R.string.cancel),
+            confirmButtonText = stringResource(R.string.logout)
+        )
+    }
 
 }
 
@@ -192,7 +211,9 @@ fun MenuScreen(
 private fun Preview() {
     LazyPizzaTheme {
         MenuScreen(
-            state = MenuState(),
+            state = MenuState(
+                isShowLogOutDialog = true
+            ),
             onAction = {}
         )
     }

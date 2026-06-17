@@ -36,10 +36,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.core.presentation.ArrowLeft
 import com.lihan.lazypizza.core.presentation.components.AppAsyncImage
+import com.lihan.lazypizza.core.presentation.components.AppIconBackgroundButton
 import com.lihan.lazypizza.core.presentation.design_system.AppButton
 import com.lihan.lazypizza.core.presentation.design_system.ButtonType
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
@@ -90,25 +90,14 @@ fun ProductDetailScreen(
                 ),
                 title = {},
                 navigationIcon = {
-                    IconButton(
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                            .size(32.dp),
+                    AppIconBackgroundButton(
                         onClick = {
                             onAction(ProductDetailAction.OnBack)
                         },
-                        shape = CircleShape,
-                        colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.textSecondary8
-                        )
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(16.dp),
-                            imageVector = ArrowLeft,
-                            tint = MaterialTheme.colorScheme.secondary,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
+                        imageVector = ArrowLeft,
+                        backgroundColor = MaterialTheme.colorScheme.textSecondary8,
+                        iconTintColor = MaterialTheme.colorScheme.secondary
+                    )
                 }
             )
         }

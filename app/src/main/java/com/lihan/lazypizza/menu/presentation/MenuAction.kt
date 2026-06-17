@@ -7,4 +7,7 @@ sealed interface MenuAction {
     data class OnAddToCartClick(val id: String): MenuAction
     data class OnProductTypeClick(val type: ProductType): MenuAction
     data class OnPizzaClick(val id: String): MenuAction
+    data object OnShowLogOut: MenuAction
+    data object OnDismissLogOutClick: MenuAction
+    data object OnLogOutConfirmClick: MenuAction
 }

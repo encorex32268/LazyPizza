@@ -6,7 +6,9 @@ import com.lihan.lazypizza.menu.presentation.model.ProductUi
 data class MenuState(
     val searchTextFieldState: TextFieldState = TextFieldState(),
     val productUiList: List<ProductUi> = emptyList(),
-    val productTypes: List<ProductType> = emptyList()
+    val productTypes: List<ProductType> = emptyList(),
+    val phoneNumber: String = "",
+    val isShowLogOutDialog: Boolean = false
 ) {
     val items: Map<ProductType,List<ProductUi>> = productUiList.groupBy { it.type }
 

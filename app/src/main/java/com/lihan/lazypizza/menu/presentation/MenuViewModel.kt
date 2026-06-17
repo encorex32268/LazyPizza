@@ -3,9 +3,11 @@ package com.lihan.lazypizza.menu.presentation
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lihan.lazypizza.auth.presentation.util.FirebaseAuthManager
 import com.lihan.lazypizza.core.domain.CartRepository
 import com.lihan.lazypizza.core.domain.StoreProductRepository
 import com.lihan.lazypizza.core.domain.UserDataStore
+import com.lihan.lazypizza.menu.presentation.MenuUiEvent.*
 import com.lihan.lazypizza.menu.presentation.mapper.toCartItem
 import com.lihan.lazypizza.menu.presentation.mapper.toDomain
 import com.lihan.lazypizza.menu.presentation.mapper.toUi
@@ -26,7 +28,8 @@ import kotlinx.coroutines.launch
 class MenuViewModel(
     private val storeProductRepository: StoreProductRepository,
     private val cartRepository: CartRepository,
-    private val userDataStore: UserDataStore
+    private val userDataStore: UserDataStore,
+    private val firebaseAuthManager: FirebaseAuthManager
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -96,7 +99,22 @@ class MenuViewModel(
             is MenuAction.OnProductTypeClick -> productTypeClick(action.type)
             is MenuAction.OnPizzaClick -> {
                 viewModelScope.launch {
-                    _uiEvent.send(MenuUiEvent.OnNavigateToDetail(action.id))
+                    _uiEvent.send(OnNavigateToDetail(action.id))
+                }
+            }
+            MenuAction.OnShowLogOut -> {
+                _state.update { it.copy(
+                    isShowLogOutDialog = true
+                ) }
+            }
+            MenuAction.OnDismissLogOutClick -> {
+                _state.update { it.copy(
+                    isShowLogOutDialog = false
+                ) }
+            }
+            MenuAction.OnLogOutConfirmClick -> {
+                viewModelScope.launch {
+                    firebaseAuthManager.signOut()
                 }
             }
         }
