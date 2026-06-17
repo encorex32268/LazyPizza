@@ -9,6 +9,12 @@ import kotlinx.serialization.Serializable
 sealed interface Route {
 
     @Serializable
+    data object AuthGraph: Route
+
+    @Serializable
+    data object Login: Route
+
+    @Serializable
     data object MenuGraph: Route
 
     @Serializable

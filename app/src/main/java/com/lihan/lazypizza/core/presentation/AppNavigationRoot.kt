@@ -1,19 +1,12 @@
 package com.lihan.lazypizza.core.presentation
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.LocalRippleConfiguration
-import androidx.compose.material3.RippleConfiguration
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,7 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
+import com.lihan.lazypizza.auth.presentation.LoginRoot
 import com.lihan.lazypizza.cart.presentation.CartRoot
 import com.lihan.lazypizza.history.presentation.HistoryRoot
 import com.lihan.lazypizza.menu.presentation.MenuRoot
@@ -75,8 +68,26 @@ fun AppNavigationRoot(
                 .padding(padding)
                 .consumeWindowInsets(padding),
             navController = navController,
-            startDestination = Route.MenuGraph,
+            startDestination = Route.AuthGraph,
         ){
+            navigation<Route.AuthGraph>(
+                startDestination = Route.Login
+            ){
+                composable<Route.Login>{
+                    LoginRoot(
+                        navigateToMenu = {
+                            navController.navigate(Route.Menu){
+                                popUpTo(Route.Menu) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
+            }
+
             navigation<Route.MenuGraph>(
                 startDestination = Route.Menu
             ){

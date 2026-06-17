@@ -10,8 +10,10 @@ import coil3.memory.MemoryCache
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import com.google.firebase.FirebaseApp
+import com.lihan.lazypizza.auth.di.authModule
 import com.lihan.lazypizza.cart.di.cartModule
 import com.lihan.lazypizza.core.di.coreModule
+import com.lihan.lazypizza.history.di.historyModule
 import com.lihan.lazypizza.menu.di.menuModule
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -32,7 +34,9 @@ class LazyPizzaApplication: Application(), SingletonImageLoader.Factory{
             modules(
                 coreModule,
                 menuModule,
-                cartModule
+                cartModule,
+                authModule,
+                historyModule
             )
         }
     }

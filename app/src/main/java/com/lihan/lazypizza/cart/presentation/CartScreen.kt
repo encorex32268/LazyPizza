@@ -36,7 +36,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.cart.presentation.components.RecommendProductCard
 import com.lihan.lazypizza.core.presentation.components.ProductCard
