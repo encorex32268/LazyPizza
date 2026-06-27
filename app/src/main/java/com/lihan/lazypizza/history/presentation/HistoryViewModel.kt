@@ -1,18 +1,31 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.lihan.lazypizza.history.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lihan.lazypizza.core.domain.OrderRepository
 import com.lihan.lazypizza.core.domain.UserDataStore
+import com.lihan.lazypizza.history.presentation.mapper.toUi
+import com.lihan.lazypizza.history.presentation.model.OrderHistoryUi
+import io.ktor.util.Hash.combine
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlin.time.Duration.Companion.milliseconds
 
 class HistoryViewModel(
-    private val userDataStore: UserDataStore
+    private val userDataStore: UserDataStore,
+    private val orderRepository: OrderRepository
 ): ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -20,8 +33,11 @@ class HistoryViewModel(
     private val _state = MutableStateFlow(HistoryState())
     val state = _state
         .onStart {
+            //fetch remote Data
+            orderRepository.fetchOrderHistories()
+
             if (!hasLoadedInitialData) {
-                observeUserStatus()
+                observeData()
                 hasLoadedInitialData = true
             }
         }
@@ -37,16 +53,37 @@ class HistoryViewModel(
         }
     }
 
-    private fun observeUserStatus(){
-        //TODO Combine HistoryData and UserDataStore
+    private fun observeData(){
+
         userDataStore
-            .getUserPhoneNumber()
-            .onEach { phoneNumber ->
+            .getUserId()
+            .onStart {
                 _state.update { it.copy(
-                    isSignIn = phoneNumber.isNotEmpty()
+                    isLoading = true
                 ) }
             }
-            .launchIn(viewModelScope)
+            .flatMapLatest {  userId ->
+                delay(500.milliseconds)
+                _state.update { it.copy(
+                    isSignIn = userId.isNotEmpty()
+                ) }
+                if (userId.isNotEmpty()){
+                    orderRepository.getOrderHistories()
+                }else{
+                    emptyFlow()
+                }
+            }.onEach { orderHistories ->
+
+                val sortedItems = orderHistories.map { orderHistory ->
+                    orderHistory.toUi()
+                }.sortedByDescending { it.createAt }
+
+                _state.update { it.copy(
+                    items = sortedItems,
+                    isLoading = false
+                ) }
+            }.launchIn(viewModelScope)
+
     }
 
 }
