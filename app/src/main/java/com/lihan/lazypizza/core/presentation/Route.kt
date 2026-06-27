@@ -40,7 +40,7 @@ sealed interface Route {
 fun Route.toRouteName(): String{
     return when(this){
         Route.Cart -> stringResource(R.string.cart)
-        Route.History -> stringResource(R.string.history)
+        Route.History -> stringResource(R.string.order_history)
         Route.Menu -> stringResource(R.string.menu)
         else -> ""
     }

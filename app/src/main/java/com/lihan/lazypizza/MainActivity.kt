@@ -19,6 +19,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.lihan.lazypizza.core.domain.StoreProductRepository
 import com.lihan.lazypizza.core.domain.util.TimerFlow
 import com.lihan.lazypizza.core.presentation.AppNavigationRoot
@@ -34,29 +38,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
-
-
-class TimerViewModel: ViewModel() {
-
-    var totalTime = MutableStateFlow(60.seconds)
-        private set
-
-    init {
-        TimerFlow
-            .timeAndEmit()
-            .takeWhile { totalTime.value > Duration.ZERO }
-            .onEach { mills ->
-                totalTime.value -= mills
-
-                if (totalTime.value < Duration.ZERO) {
-                    totalTime.value = Duration.ZERO
-                }
-            }.launchIn(viewModelScope)
-    }
-}
 
 class MainActivity : ComponentActivity() {
 
@@ -64,13 +49,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-
         setContent {
             LazyPizzaTheme {
+
+                val mainViewModel = koinViewModel<MainViewModel>()
+                val state by mainViewModel.state.collectAsStateWithLifecycle()
+
                 //Avoid this
                 //No Compose Koin context setup, taking default. Use KoinContext(), KoinAndroidContext() or KoinApplication() function to setup or create Koin context and avoid such message.
                 KoinContext {
-                    AppNavigationRoot()
+                    AppNavigationRoot(
+                        isLogin = state.isLogin
+                    )
                 }
             }
         }

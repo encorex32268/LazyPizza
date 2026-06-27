@@ -22,6 +22,7 @@ import com.lihan.lazypizza.menu.presentation.product_detail.ProductDetailRoot
 
 @Composable
 fun AppNavigationRoot(
+    isLogin: Boolean,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -68,7 +69,11 @@ fun AppNavigationRoot(
                 .padding(padding)
                 .consumeWindowInsets(padding),
             navController = navController,
-            startDestination = Route.AuthGraph,
+            startDestination = if(isLogin){
+                Route.MenuGraph
+            }else{
+                Route.AuthGraph
+            },
         ){
             navigation<Route.AuthGraph>(
                 startDestination = Route.Login
@@ -129,7 +134,26 @@ fun AppNavigationRoot(
                 startDestination = Route.History
             ){
                 composable<Route.History>{
-                    HistoryRoot()
+                    HistoryRoot(
+                        navigateToMenu = {
+                            navController.navigate(Route.Menu){
+                                popUpTo(Route.Menu) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                        navigateToLogin = {
+                            navController.navigate(Route.AuthGraph){
+                                popUpTo(Route.Menu) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
                 }
             }
         }
