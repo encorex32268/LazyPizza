@@ -18,7 +18,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -46,9 +48,9 @@ class MenuViewModel(
     private val _state = MutableStateFlow(MenuState())
     val state = combine(
         _originData,
-        _state.map { it.productTypes }.distinctUntilChanged(),
+        _state,
         searchText
-    ) { originData, productTypes, query ->
+    ) { originData, state, query ->
 
         val orderId = userDataStore.getOrderId().first()
         val orderProducts = originData
@@ -68,11 +70,11 @@ class MenuViewModel(
 
         _state.value.copy(
             productUiList = originData.filter { product ->
-                val matchesType = productTypes.isEmpty() || product.type in productTypes
+                val matchesType = state.productTypes.isEmpty() || product.type in state.productTypes
                 val matchesSearch = product.name.contains(query, ignoreCase = true) || product.description.contains(query,ignoreCase = true)
                 matchesType && matchesSearch
             },
-            productTypes = productTypes
+            productTypes = state.productTypes
         )
 
 
@@ -127,6 +129,17 @@ class MenuViewModel(
             if (!isOrdering){
                 userDataStore.setIsOrdering(true)
             }
+
+            userDataStore
+                .getUserPhoneNumber()
+                .onEach { phoneNumber ->
+                    if (phoneNumber.isNotEmpty()){
+                        _state.update { it.copy(
+                            phoneNumber = phoneNumber
+                        ) }
+                    }
+                }.launchIn(this)
+
         }
     }
 

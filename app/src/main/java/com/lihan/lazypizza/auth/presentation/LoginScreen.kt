@@ -3,12 +3,15 @@ package com.lihan.lazypizza.auth.presentation
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +34,7 @@ import com.lihan.lazypizza.core.presentation.design_system.AppButton
 import com.lihan.lazypizza.core.presentation.design_system.ButtonType
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.body3Regular
+import com.lihan.lazypizza.core.presentation.ui.theme.textSecondary8
 import com.lihan.lazypizza.core.presentation.ui.theme.title1Medium
 import com.lihan.lazypizza.core.presentation.util.ObserveAsEvents
 import kotlin.time.Duration
@@ -55,12 +60,15 @@ fun LoginRoot(
 }
 
 @Composable
-fun LoginScreen(
+private fun LoginScreen(
     state: LoginState,
     onAction: (LoginAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val activity = LocalActivity.current
+    val isPreview = LocalInspectionMode.current
+
+    val activity = if (isPreview) null else LocalActivity.current
+
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
 
@@ -167,16 +175,27 @@ fun LoginScreen(
             }
 
         }
+
+        if (state.loginStatus == LoginStatus.Loading){
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.onBackground.copy(
+                        alpha = 0.3f
+                    ))
+                    .wrapContentSize()
+            )
+        }
     }
 }
 
 @Preview
 @Composable
-private fun Preview() {
+private fun LoginScreenPreview() {
     LazyPizzaTheme {
         LoginScreen(
             state = LoginState(
-
+                loginStatus = LoginStatus.Loading
             ),
             onAction = {}
         )

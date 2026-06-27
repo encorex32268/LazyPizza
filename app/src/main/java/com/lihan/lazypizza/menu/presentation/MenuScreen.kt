@@ -74,6 +74,7 @@ fun MenuScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
+
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -189,20 +190,22 @@ fun MenuScreen(
             }
 
         }
+        if (state.isShowLogOutDialog){
+            AppDialog(
+                title = stringResource(R.string.log_out_dialog_title),
+                onDismiss = {
+                    onAction(MenuAction.OnDismissLogOutClick)
+                },
+                onConfirmClick = {
+                    onAction(MenuAction.OnLogOutConfirmClick)
+                },
+                dismissButtonText = stringResource(R.string.cancel),
+                confirmButtonText = stringResource(R.string.logout)
+            )
+        }
+
     }
-    if (state.isShowLogOutDialog){
-        AppDialog(
-            title = stringResource(R.string.log_out_dialog_title),
-            onDismiss = {
-                onAction(MenuAction.OnDismissLogOutClick)
-            },
-            onConfirmClick = {
-                onAction(MenuAction.OnLogOutConfirmClick)
-            },
-            dismissButtonText = stringResource(R.string.cancel),
-            confirmButtonText = stringResource(R.string.logout)
-        )
-    }
+
 
 }
 
@@ -212,7 +215,7 @@ private fun Preview() {
     LazyPizzaTheme {
         MenuScreen(
             state = MenuState(
-                isShowLogOutDialog = true
+                isShowLogOutDialog = false
             ),
             onAction = {}
         )

@@ -2,6 +2,8 @@ package com.lihan.lazypizza.auth.presentation
 
 import android.app.Activity
 import android.util.Log
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -153,6 +155,9 @@ class LoginViewModel(
             loginStatus = LoginStatus.Loading
         ) }
 
+        //clean OTP TextField
+        cleanOTPTextField()
+
 
         val phoneNumber = state.value.phoneNumberTextField.text.toString()
 
@@ -187,6 +192,12 @@ class LoginViewModel(
 
                 else -> Unit
             }
+        }
+    }
+
+    private fun cleanOTPTextField() {
+        _state.value.otpTextFieldStates.forEach {
+            it.clearText()
         }
     }
 
