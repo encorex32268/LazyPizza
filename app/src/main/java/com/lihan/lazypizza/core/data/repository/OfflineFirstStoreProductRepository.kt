@@ -7,10 +7,13 @@ import com.lihan.lazypizza.core.data.mapper.toDomain
 import com.lihan.lazypizza.core.data.mapper.toEntity
 import com.lihan.lazypizza.core.data.model.ProductDto
 import com.lihan.lazypizza.core.data.model.ToppingDto
+import com.lihan.lazypizza.core.domain.RemoteDataSource
 import com.lihan.lazypizza.core.domain.StoreProductRepository
 import com.lihan.lazypizza.core.domain.model.Product
 import com.lihan.lazypizza.core.domain.model.Topping
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -20,7 +23,7 @@ import kotlin.collections.map
 import kotlin.coroutines.coroutineContext
 
 class OfflineFirstStoreProductRepository(
-    private val firebaseFirestore: FirebaseFirestore,
+    private val remoteDataSource: RemoteDataSource,
     private val productDao: ProductDao,
     private val toppingDao: ToppingDao,
 ): StoreProductRepository {
@@ -31,22 +34,8 @@ class OfflineFirstStoreProductRepository(
             .getProducts().first().isEmpty()
 
         if (isDatabaseEmpty){
-            val result = firebaseFirestore
-                .collection("products")
-                .get()
-                .await()
 
-            val products = result.map { document ->
-                val data = document.data
-                ProductDto(
-                    id = document.id,
-                    name = data["name"] as? String ?: "",
-                    price = (data["price"] as? Number)?.toDouble() ?: 0.0,
-                    category = data["category"] as? String ?: "",
-                    imageUrl = data["imageUrl"] as? String ?: "",
-                    ingredients = data["ingredients"] as? List<String> ?: emptyList()
-                )
-            }
+            val products = remoteDataSource.getProducts()
 
             productDao.upsertProductEntities(
                 products.map { it.toEntity() }
@@ -80,20 +69,7 @@ class OfflineFirstStoreProductRepository(
 
         if (isDatabaseEmpty){
 
-            val result = firebaseFirestore
-                .collection("toppings")
-                .get()
-                .await()
-
-            val toppings = result.map { document ->
-                val data = document.data
-                ToppingDto(
-                    id = document.id,
-                    name = data["name"] as? String ?: "",
-                    price = (data["price"] as? Number)?.toDouble() ?: 0.0,
-                    imageUrl = data["imageUrl"] as? String ?: "",
-                )
-            }
+            val toppings = remoteDataSource.getToppings()
 
             toppingDao.upsertToppingEntities(
                 toppings.map { it.toEntity() }
