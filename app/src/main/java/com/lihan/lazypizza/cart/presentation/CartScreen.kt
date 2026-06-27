@@ -48,10 +48,12 @@ import com.lihan.lazypizza.cart.presentation.model.CartItemToppingUi
 import com.lihan.lazypizza.cart.presentation.model.CartItemUi
 import com.lihan.lazypizza.cart.presentation.model.CartItemWithToppingsUi
 import com.lihan.lazypizza.core.domain.formatToTwoDecimals
+import com.lihan.lazypizza.core.presentation.components.AppDialog
 import com.lihan.lazypizza.core.presentation.components.PlaceholderView
 import com.lihan.lazypizza.core.presentation.design_system.AppButton
 import com.lihan.lazypizza.core.presentation.design_system.ButtonType
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
+import com.lihan.lazypizza.core.presentation.ui.util.UiText
 import com.lihan.lazypizza.menu.presentation.MenuState
 import kotlin.random.Random
 
@@ -237,7 +239,7 @@ private fun CartScreen(
                                 text = stringResource(R.string.proceed_to_checkout,state.cartItemTotalPrice),
                                 type = ButtonType.Filled,
                                 onClick = {
-                                    //proceed
+                                    onAction(CartAction.OnCheckoutClick)
                                 }
                             )
                         }
@@ -245,6 +247,16 @@ private fun CartScreen(
 
                 }
             }
+        }
+        if (state.error!=null){
+            AppDialog(
+                title = state.error.asString(),
+                confirmButtonText = stringResource(R.string.confirm),
+                onConfirmClick = {
+                    onAction(CartAction.OnDismissErrorDialog)
+                },
+                onDismiss = {}
+            )
         }
     }
 
@@ -326,7 +338,8 @@ private fun CartScreenPreview() {
         CartScreen(
             state = CartState(
                 recommendItems = MenuState.fakeProductUiList.shuffled(random = Random(4)),
-                items = emptyList()
+                items = items,
+                error = UiText.DynamicString("Error !!")
             ),
             onAction = {}
         )

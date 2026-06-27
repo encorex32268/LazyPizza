@@ -6,4 +6,6 @@ sealed interface CartAction {
     data class OnDeleteClick(val cartItemId: Long, val productId: String): CartAction
     data class OnAddItemClick(val productId: String): CartAction
     data object OnBackToMenu: CartAction
+    data object OnCheckoutClick: CartAction
+    data object OnDismissErrorDialog: CartAction
 }

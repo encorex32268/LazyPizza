@@ -2,12 +2,14 @@ package com.lihan.lazypizza.cart.presentation
 
 import com.lihan.lazypizza.cart.presentation.model.CartItemWithToppingsUi
 import com.lihan.lazypizza.core.domain.formatToTwoDecimals
+import com.lihan.lazypizza.core.presentation.ui.util.UiText
 import com.lihan.lazypizza.menu.presentation.model.ProductUi
 
 data class CartState(
     val isLoading: Boolean = false,
     val items: List<CartItemWithToppingsUi> = emptyList(),
-    val recommendItems: List<ProductUi> = emptyList()
+    val recommendItems: List<ProductUi> = emptyList(),
+    val error: UiText?=null,
 ){
 
     val cartItemTotalPrice: String

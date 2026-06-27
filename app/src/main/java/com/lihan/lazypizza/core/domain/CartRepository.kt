@@ -20,5 +20,7 @@ interface CartRepository {
 
     suspend fun deleteCartItem(cartItemId: Long)
 
+    suspend fun cleanCart(cartId: String)
+
 
 }

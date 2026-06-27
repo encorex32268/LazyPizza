@@ -2,10 +2,15 @@ package com.lihan.lazypizza.cart.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lihan.lazypizza.cart.presentation.mapper.toDomainOrderHistory
 import com.lihan.lazypizza.cart.presentation.mapper.toUi
 import com.lihan.lazypizza.core.domain.CartRepository
+import com.lihan.lazypizza.core.domain.OrderRepository
 import com.lihan.lazypizza.core.domain.StoreProductRepository
 import com.lihan.lazypizza.core.domain.UserDataStore
+import com.lihan.lazypizza.core.domain.util.onFailure
+import com.lihan.lazypizza.core.domain.util.onSuccess
+import com.lihan.lazypizza.core.presentation.util.toUiText
 import com.lihan.lazypizza.menu.presentation.mapper.toCartItem
 import com.lihan.lazypizza.menu.presentation.mapper.toUi
 import com.lihan.lazypizza.menu.presentation.model.ProductUi
@@ -27,7 +32,8 @@ import kotlin.collections.sortedBy
 class CartViewModel(
     private val cartRepository: CartRepository,
     private val storeProductRepository: StoreProductRepository,
-    private val userDataStore: UserDataStore
+    private val userDataStore: UserDataStore,
+    private val orderRepository: OrderRepository
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -61,6 +67,41 @@ class CartViewModel(
             is CartAction.OnPlusClick -> updateCartItemQuantity(action.cartItemId, 1)
             is CartAction.OnAddItemClick -> addToCartItem(action.productId)
             is CartAction.OnBackToMenu -> Unit
+            CartAction.OnCheckoutClick -> proceedToCheckout()
+            CartAction.OnDismissErrorDialog -> dismissErrorDialog()
+        }
+    }
+
+    private fun dismissErrorDialog(){
+        _state.update { it.copy(
+            error = null
+        ) }
+    }
+
+    private fun proceedToCheckout(){
+        viewModelScope.launch {
+            val currentState = state.value
+            val cartItemWithToppings = currentState.items
+            orderRepository
+                .create(
+                    orderHistory = cartItemWithToppings.toDomainOrderHistory()
+                )
+                .first()
+                .onSuccess {
+                    //1.let orderId + 1
+                    //2.clean cart
+                    val currentOrderId = userDataStore.getOrderId().first()
+                    userDataStore.setOrderId(currentOrderId + 1)
+
+                    val cartId = cartItemWithToppings.first().cartItem.id
+                    cartRepository.cleanCart(cartId = cartId.toString())
+
+                }.onFailure { error ->
+                    _state.update { it.copy(
+                        error = error.toUiText()
+                    ) }
+                }
+
         }
     }
 
@@ -127,7 +168,6 @@ class CartViewModel(
                 }
             }
             .onEach { cartItemWithToppingsUis ->
-
                 _state.update {
                     it.copy(
                         items = cartItemWithToppingsUis

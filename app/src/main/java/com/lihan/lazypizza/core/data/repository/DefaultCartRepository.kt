@@ -42,4 +42,8 @@ class DefaultCartRepository(
     override suspend fun deleteCartItem(cartItemId: Long) {
         cartDao.deleteCartItemById(cartItemId)
     }
+
+    override suspend fun cleanCart(cartId: String) {
+        cartDao.clearCart(cartId = cartId)
+    }
 }
