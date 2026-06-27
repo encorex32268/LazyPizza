@@ -17,6 +17,8 @@ val OutlineLight = Color(0xFFE6E7ED)
 val SuccessLight = Color(0xFF2E7D32)
 val WarningLight = Color(0xFFF9A825)
 
+val ExtendsText = Color(0xFF101C28)
+
 // Dark Theme colors (Material 3 cohesive design)
 val PrimaryDark = Color(0xFFFF8F7B)
 val TextPrimaryDark = Color(0xFFF3F6F8)

@@ -13,7 +13,7 @@
     <string name="add_extra_toppings">ADD EXTRA TOPPINGS</string>
     <string name="add_to_cart_for">Add to Cart for $%1$s</string>
     <string name="cart">Cart</string>
-    <string name="history">History</string>
+    <string name="order_history">Order History</string>
     <string name="menu">Menu</string>
     <string name="recommended_to_add_your_order">RECOMMENDED TO ADD TO YOUR ORDER</string>
     <string name="proceed_to_checkout">Proceed to Checkout ($%1$s)</string>
@@ -36,8 +36,16 @@
     <string name="resend_code">Resend code</string>
     <string name="confirm">Confirm</string>
     <string name="logout">Log Out</string>
-    <string name="you_can_request_new_code">\"You can request a new code in %1$s\"</string>
+    <string name="you_can_request_new_code">You can request a new code in %1$s</string>
     <string name="log_out_dialog_title">Are you sure you want to log out?</string>
     <string name="cancel">Cancel</string>
     <string name="store_phone_number">+1 (555) 321-7890</string>
+    <string name="go_to_menu">Go to Menu</string>
+    <string name="in_progress">In Progress</string>
+    <string name="completed">Completed</string>
+    <string name="order_number">Order #%1$s</string>
+    <string name="total_amount">Total amount:</string>
+    <string name="error_order_canceled">This order was canceled.</string>
+    <string name="error_order_failed">Order failed ! Please try again.</string>
+    <string name="error_order_unknown_user">Unknown User.</string>
 </resources>
