@@ -1,12 +1,16 @@
 package com.lihan.lazypizza.core.presentation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,9 +20,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.lihan.lazypizza.auth.presentation.LoginRoot
 import com.lihan.lazypizza.cart.presentation.CartRoot
+import com.lihan.lazypizza.cart.presentation.CartSharedViewModel
+import com.lihan.lazypizza.cart.presentation.order_checkout.OrderCheckoutRoot
 import com.lihan.lazypizza.history.presentation.HistoryRoot
 import com.lihan.lazypizza.menu.presentation.MenuRoot
 import com.lihan.lazypizza.menu.presentation.product_detail.ProductDetailRoot
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AppNavigationRoot(
@@ -118,7 +125,16 @@ fun AppNavigationRoot(
                 startDestination = Route.Cart
             ){
                 composable<Route.Cart>{
+                    val parentEntry = navController.rememberParentEntry(Route.CartGraph.toRouteName())
+                    val cartSharedViewModel = koinViewModel<CartSharedViewModel>(
+                        viewModelStoreOwner = parentEntry
+                    )
+
                     CartRoot(
+                        onNavigateToOrderCheckout = {
+                            navController.navigate(Route.OrderCheckout)
+                        },
+                        sharedViewModel = cartSharedViewModel,
                         onBackToMenu = {
                             navController.navigate(Route.Menu){
                                 popUpTo(Route.Menu) {
@@ -130,6 +146,17 @@ fun AppNavigationRoot(
                         }
                     )
                 }
+                composable<Route.OrderCheckout>{
+                    val parentEntry = navController.rememberParentEntry(Route.CartGraph.toRouteName())
+                    val cartSharedViewModel = koinViewModel<CartSharedViewModel>(
+                        viewModelStoreOwner = parentEntry
+                    )
+                    OrderCheckoutRoot(
+                        sharedViewModel = cartSharedViewModel,
+                        onBack = { navController.navigateUp() }
+                    )
+                }
+
             }
 
             navigation<Route.HistoryGraph>(
@@ -160,5 +187,13 @@ fun AppNavigationRoot(
             }
         }
 
+    }
+}
+
+@SuppressLint("UnrememberedGetBackStackEntry")
+@Composable
+fun NavController.rememberParentEntry(route: String): NavBackStackEntry {
+    return remember(this) {
+        this.getBackStackEntry(route)
     }
 }

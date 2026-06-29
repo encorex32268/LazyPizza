@@ -16,72 +16,61 @@ import com.lihan.lazypizza.menu.presentation.mapper.toUi
 import com.lihan.lazypizza.menu.presentation.model.ProductUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.collections.sortedBy
 
-class CartViewModel(
+class CartSharedViewModel(
     private val cartRepository: CartRepository,
-    private val storeProductRepository: StoreProductRepository,
     private val userDataStore: UserDataStore,
+    private val storeProductRepository: StoreProductRepository,
     private val orderRepository: OrderRepository
-) : ViewModel() {
+): ViewModel() {
 
     private var hasLoadedInitialData = false
 
     private var _recommendItems = MutableStateFlow(emptyList<ProductUi>())
 
-    private val _state = MutableStateFlow(CartState())
-    val state = _state.onStart {
-        if (!hasLoadedInitialData) {
-            observeCart()
-            hasLoadedInitialData = true
-        }
-    }.onEach { state ->
-        _state.update { it.copy(
-            recommendItems = state.recommendItems.sortedBy { productUi ->
-                productUi.id
+    private var _state = MutableStateFlow(CartSharedState())
+    val state = _state
+        .onStart {
+            if (!hasLoadedInitialData){
+                observeCartItems()
+                hasLoadedInitialData = true
             }
-        ) }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
-        initialValue = CartState()
-    )
+        }.onEach { state ->
+            _state.update { it.copy(
+                recommendItems = state.recommendItems.sortedBy { productUi ->
+                    productUi.id
+                }) }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = CartSharedState()
+        )
 
     init {
         getRecommendItems()
     }
 
-
-    fun onAction(action: CartAction) {
-        when (action) {
-            is CartAction.OnDeleteClick -> deleteCartItem(action.cartItemId, action.productId)
-            is CartAction.OnMinusClick -> updateCartItemQuantity(action.cartItemId, -1)
-            is CartAction.OnPlusClick -> updateCartItemQuantity(action.cartItemId, 1)
-            is CartAction.OnAddItemClick -> addToCartItem(action.productId)
-            is CartAction.OnBackToMenu -> Unit
-            CartAction.OnCheckoutClick -> proceedToCheckout()
-            CartAction.OnDismissErrorDialog -> dismissErrorDialog()
+    fun onAction(action: CartSharedAction){
+        when(action){
+            is CartSharedAction.OnDeleteClick -> deleteCartItem(action.cartItemId, action.productId)
+            is CartSharedAction.OnMinusClick -> updateCartItemQuantity(action.cartItemId, -1)
+            is CartSharedAction.OnPlusClick -> updateCartItemQuantity(action.cartItemId, 1)
+            is CartSharedAction.OnAddItemClick -> addToCartItem(action.productId)
+            CartSharedAction.OnPlaceOrderClick -> placeOrder()
+            CartSharedAction.OnDismissErrorDialog -> dismissErrorDialog()
         }
     }
 
-    private fun dismissErrorDialog(){
-        _state.update { it.copy(
-            error = null
-        ) }
-    }
-
-    private fun proceedToCheckout(){
+    private fun placeOrder() {
         viewModelScope.launch {
             val currentState = state.value
             val cartItemWithToppings = currentState.items
@@ -108,22 +97,22 @@ class CartViewModel(
         }
     }
 
-    private fun deleteCartItem(cartItemId: Long, productId: String) {
-        viewModelScope.launch {
-            //restore recommend items
-            val product = _recommendItems.value.find { it.id == productId }
-            if (product != null) {
+
+    private fun observeCartItems(){
+        cartRepository
+            .getCartItems()
+            .map { domainList ->
+                domainList.mapNotNull { it.toUi() }
+            }
+            .onEach { cartItemWithToppingsUis ->
                 _state.update {
                     it.copy(
-                        recommendItems = it.recommendItems + product
+                        items = cartItemWithToppingsUis
                     )
                 }
             }
-
-            cartRepository.deleteCartItem(cartItemId)
-        }
+            .launchIn(viewModelScope)
     }
-
 
     private fun updateCartItemQuantity(cartItemId: Long, count: Int) {
         viewModelScope.launch {
@@ -135,6 +124,21 @@ class CartViewModel(
                 cartItemId = cartItemId,
                 quantity = newQuantity
             )
+        }
+    }
+
+    private fun deleteCartItem(cartItemId: Long, productId: String) {
+        viewModelScope.launch {
+            //restore recommend items
+            val product = _recommendItems.value.find { it.id == productId }
+            if (product != null) {
+                _state.update {
+                    it.copy(
+                        recommendItems = it.recommendItems + product
+                    )
+                }
+            }
+            cartRepository.deleteCartItem(cartItemId)
         }
     }
 
@@ -162,24 +166,6 @@ class CartViewModel(
         }
     }
 
-    private fun observeCart() {
-        cartRepository
-            .getCartItems()
-            .map { cartItemWithToppings ->
-                cartItemWithToppings.mapNotNull { cartItemWithTopping ->
-                    cartItemWithTopping.toUi()
-                }
-            }
-            .onEach { cartItemWithToppingsUis ->
-                _state.update {
-                    it.copy(
-                        items = cartItemWithToppingsUis
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-    }
-
     private fun getRecommendItems() {
         viewModelScope.launch {
             val items = storeProductRepository
@@ -197,5 +183,11 @@ class CartViewModel(
                 )
             }
         }
+    }
+
+    private fun dismissErrorDialog(){
+        _state.update { it.copy(
+            error = null
+        ) }
     }
 }

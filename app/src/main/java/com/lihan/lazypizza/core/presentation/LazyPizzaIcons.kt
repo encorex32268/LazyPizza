@@ -15,6 +15,9 @@ val BookOpen: ImageVector
 val Check: ImageVector
     @Composable get() = ImageVector.vectorResource(R.drawable.check)
 
+val ChevronUp: ImageVector
+    @Composable get() = ImageVector.vectorResource(R.drawable.chevron_up)
+
 val ChevronDown: ImageVector
     @Composable get() = ImageVector.vectorResource(R.drawable.chevron_down)
 

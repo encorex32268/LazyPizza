@@ -48,4 +48,16 @@
     <string name="error_order_canceled">This order was canceled.</string>
     <string name="error_order_failed">Order failed ! Please try again.</string>
     <string name="error_order_unknown_user">Unknown User.</string>
+    <string name="order_checkout">Order Checkout</string>
+    <string name="pickup_time">PICKUP TIME</string>
+    <string name="order_checkout_pickup_earliest_available_time">Earliest available time</string>
+    <string name="order_checkout_pickup_schedule_time">Schedule time</string>
+    <string name="earliest_pickup_time">EARLIEST PICKUP TIME:</string>
+    <string name="order_details">ORDER DETAILS</string>
+    <string name="comments">COMMENTS</string>
+    <string name="order_total">ORDER TOTAL</string>
+    <string name="place_order">Place Order</string>
+    <string name="add_comment">Add Comment</string>
+    <string name="select_date">SELECT DATE</string>
+    <string name="ok">Ok</string>
 </resources>

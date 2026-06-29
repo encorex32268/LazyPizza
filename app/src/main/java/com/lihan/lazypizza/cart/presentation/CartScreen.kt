@@ -12,13 +12,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,56 +28,49 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lihan.lazypizza.R
+import com.lihan.lazypizza.cart.presentation.components.CartItemList
+import com.lihan.lazypizza.cart.presentation.components.RecommendList
 import com.lihan.lazypizza.cart.presentation.components.RecommendProductCard
-import com.lihan.lazypizza.core.presentation.components.ProductCard
-import com.lihan.lazypizza.core.presentation.ui.theme.body1Medium
-import com.lihan.lazypizza.core.presentation.ui.theme.label2SemiBold
-import com.lihan.lazypizza.menu.presentation.ProductType
-import org.koin.androidx.compose.koinViewModel
-
-import com.lihan.lazypizza.cart.presentation.model.CartItemToppingUi
-import com.lihan.lazypizza.cart.presentation.model.CartItemUi
-import com.lihan.lazypizza.cart.presentation.model.CartItemWithToppingsUi
 import com.lihan.lazypizza.core.domain.formatToTwoDecimals
 import com.lihan.lazypizza.core.presentation.components.AppDialog
 import com.lihan.lazypizza.core.presentation.components.PlaceholderView
 import com.lihan.lazypizza.core.presentation.design_system.AppButton
 import com.lihan.lazypizza.core.presentation.design_system.ButtonType
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
-import com.lihan.lazypizza.core.presentation.ui.util.UiText
+import com.lihan.lazypizza.core.presentation.ui.theme.body1Medium
+import com.lihan.lazypizza.core.presentation.ui.theme.label2SemiBold
 import com.lihan.lazypizza.menu.presentation.MenuState
 import kotlin.random.Random
 
 @Composable
 fun CartRoot(
     onBackToMenu: () -> Unit,
-    viewModel: CartViewModel = koinViewModel()
+    onNavigateToOrderCheckout: () -> Unit,
+    sharedViewModel: CartSharedViewModel
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val sharedState by sharedViewModel.state.collectAsStateWithLifecycle()
 
     CartScreen(
-        state = state,
-        onAction = { action ->
-            when(action){
-                is CartAction.OnBackToMenu -> onBackToMenu()
-                else -> Unit
-            }
-            viewModel.onAction(action)
-        }
+        sharedState = sharedState,
+        onSharedAction = sharedViewModel::onAction,
+        onBackToMenu = onBackToMenu,
+        onProceedToCheckoutClick = onNavigateToOrderCheckout
+
     )
 }
 
 @Composable
 private fun CartScreen(
-    state: CartState,
-    onAction: (CartAction) -> Unit,
+    sharedState: CartSharedState,
+    onSharedAction: (CartSharedAction) -> Unit,
+    onBackToMenu: () -> Unit,
+    onProceedToCheckoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -107,7 +98,7 @@ private fun CartScreen(
             modifier = Modifier.fillMaxSize().padding(paddingValues)
         ){
             when{
-                state.items.isEmpty() -> {
+                sharedState.items.isEmpty() -> {
                     PlaceholderView(
                         modifier = Modifier
                             .align(Alignment.TopCenter)
@@ -115,9 +106,7 @@ private fun CartScreen(
                         title = stringResource(R.string.cart_is_empty_title),
                         content = stringResource(R.string.cart_is_empty_content),
                         buttonText = stringResource(R.string.back_to_menu),
-                        onClick = {
-                            onAction(CartAction.OnBackToMenu)
-                        }
+                        onClick = onBackToMenu
                     )
                 }
                 else ->{
@@ -135,43 +124,24 @@ private fun CartScreen(
                                 columns = GridCells.Fixed(1),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                items(
-                                    items = state.items,
-                                    key = { it.cartItem.cartItemId }
-                                ){ cartItemWithToppings ->
-                                    val cartItem = cartItemWithToppings.cartItem
-                                    val type = if (cartItem.productId.startsWith("pizza_")){
-                                        ProductType.Pizza
-                                    }else{
-                                        ProductType.Other
+                                CartItemList(
+                                    items = sharedState.items,
+                                    onPlusClick = { cartItemId ->
+                                        onSharedAction(CartSharedAction.OnPlusClick(cartItemId))
+                                    },
+                                    onMinusClick = { cartItemId ->
+                                        onSharedAction(CartSharedAction.OnMinusClick(cartItemId))
+                                    },
+                                    onDeleteClick = { cartItemId , productId ->
+                                        onSharedAction(
+                                            CartSharedAction.OnDeleteClick(
+                                                cartItemId = cartItemId,
+                                                productId = productId
+                                            ),
+                                        )
                                     }
-                                    ProductCard(
-                                        modifier = Modifier.animateItem(),
-                                        type = type,
-                                        name = cartItem.name,
-                                        image = cartItem.imageUrl,
-                                        description = cartItemWithToppings.toppingsDescription,
-                                        quantity = cartItem.quantity,
-                                        priceCalculate = cartItemWithToppings.priceDetail,
-                                        onPlusClick = {
-                                            onAction(CartAction.OnPlusClick(cartItemWithToppings.cartItem.cartItemId))
-                                        },
-                                        onMinusClick = {
-                                            onAction(CartAction.OnMinusClick(cartItemWithToppings.cartItem.cartItemId))
-                                        },
-                                        onDeleteClick = {
-                                            onAction(
-                                                CartAction.OnDeleteClick(
-                                                    cartItemId = cartItemWithToppings.cartItem.cartItemId,
-                                                    productId = cartItem.productId
-                                                ),
-                                            )
-                                        },
-                                        totalPrice = cartItemWithToppings.totalPrice,
-                                        isEditingMode = true
-                                    )
+                                )
 
-                                }
                                 item{
                                     Spacer(Modifier.height(20.dp))
                                     Text(
@@ -183,33 +153,12 @@ private fun CartScreen(
                                     Spacer(Modifier.height(8.dp))
                                 }
                                 item {
-                                    LazyHorizontalGrid(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(216.dp)
-                                            .animateContentSize(),
-                                        rows = GridCells.Fixed(1),
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        items(
-                                            items = state.recommendItems,
-                                            key = {productUi -> productUi.id}
-                                        ) { productUi ->
-                                            RecommendProductCard(
-                                                modifier = Modifier
-                                                    .padding(bottom = 8.dp)
-                                                    .width(width = 160.dp)
-                                                    .animateItem(),
-                                                image = productUi.imageUrl,
-                                                name = productUi.name,
-                                                price = "$${productUi.price.formatToTwoDecimals()}",
-                                                onAddClick = {
-                                                    onAction(CartAction.OnAddItemClick(productUi.id))
-                                                }
-                                            )
-
+                                    RecommendList(
+                                        recommendItems = sharedState.recommendItems,
+                                        onAddClick = { id ->
+                                            onSharedAction(CartSharedAction.OnAddItemClick(id))
                                         }
-                                    }
+                                    )
                                 }
                                 item {
                                     Spacer(Modifier.height(32.dp))
@@ -236,11 +185,9 @@ private fun CartScreen(
                         ){
                             AppButton(
                                 modifier = Modifier.fillMaxWidth(),
-                                text = stringResource(R.string.proceed_to_checkout,state.cartItemTotalPrice),
+                                text = stringResource(R.string.proceed_to_checkout,sharedState.cartItemTotalPrice),
                                 type = ButtonType.Filled,
-                                onClick = {
-                                    onAction(CartAction.OnCheckoutClick)
-                                }
+                                onClick = onProceedToCheckoutClick
                             )
                         }
                     }
@@ -248,12 +195,12 @@ private fun CartScreen(
                 }
             }
         }
-        if (state.error!=null){
+        if (sharedState.error!=null){
             AppDialog(
-                title = state.error.asString(),
+                title = sharedState.error.asString(),
                 confirmButtonText = stringResource(R.string.confirm),
                 onConfirmClick = {
-                    onAction(CartAction.OnDismissErrorDialog)
+                    onSharedAction(CartSharedAction.OnDismissErrorDialog)
                 },
                 onDismiss = {}
             )
@@ -266,82 +213,14 @@ private fun CartScreen(
 @Composable
 private fun CartScreenPreview() {
     LazyPizzaTheme {
-
-        val items = listOf(
-            CartItemWithToppingsUi(
-                cartItem = CartItemUi(
-                    cartItemId = 1,
-                    id = 1,
-                    productId = "pizza_1",
-                    quantity = 2,
-                    name = "Margherita Pizza",
-                    price = 12.99,
-                    imageUrl = ""
-                ),
-                toppings = listOf(
-                    CartItemToppingUi(
-                        cartItemId = 1,
-                        toppingId = "topping_1",
-                        quantity = 1,
-                        name = "Extra Cheese",
-                        price = 1.50
-                    ),
-                    CartItemToppingUi(
-                        cartItemId = 1,
-                        toppingId = "topping_2",
-                        quantity = 1,
-                        name = "Mushrooms",
-                        price = 0.75
-                    )
-                )
-            ),
-            CartItemWithToppingsUi(
-                cartItem = CartItemUi(
-                    cartItemId = 2,
-                    id = 2,
-                    productId = "drink_1",
-                    quantity = 1,
-                    name = "Coca Cola",
-                    price = 2.50,
-                    imageUrl = ""
-                ),
-                toppings = emptyList()
-            )
-            ,
-            CartItemWithToppingsUi(
-                cartItem = CartItemUi(
-                    cartItemId = 3,
-                    id = 3,
-                    productId = "drink_3",
-                    quantity = 1,
-                    name = "Coca Cola3",
-                    price = 2.50,
-                    imageUrl = ""
-                ),
-                toppings = emptyList()
-            )
-            ,
-            CartItemWithToppingsUi(
-                cartItem = CartItemUi(
-                    cartItemId = 4,
-                    id = 4,
-                    productId = "drink_4",
-                    quantity = 1,
-                    name = "Coca Cola4",
-                    price = 2.50,
-                    imageUrl = ""
-                ),
-                toppings = emptyList()
-            )
-        )
-
         CartScreen(
-            state = CartState(
+            sharedState = CartSharedState(
                 recommendItems = MenuState.fakeProductUiList.shuffled(random = Random(4)),
-                items = items,
-                error = null
+                items = CartPreviewData.items,
             ),
-            onAction = {}
+            onSharedAction = {},
+            onBackToMenu = {},
+            onProceedToCheckoutClick = {}
         )
     }
 }

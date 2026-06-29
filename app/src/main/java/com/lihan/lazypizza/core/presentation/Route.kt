@@ -30,6 +30,9 @@ sealed interface Route {
     data object Cart: Route
 
     @Serializable
+    data object OrderCheckout: Route
+
+    @Serializable
     data object HistoryGraph: Route
 
     @Serializable
@@ -42,6 +45,7 @@ fun Route.toRouteName(): String{
         Route.Cart -> stringResource(R.string.cart)
         Route.History -> stringResource(R.string.order_history)
         Route.Menu -> stringResource(R.string.menu)
+        Route.CartGraph -> "cart_graph"
         else -> ""
     }
 }
