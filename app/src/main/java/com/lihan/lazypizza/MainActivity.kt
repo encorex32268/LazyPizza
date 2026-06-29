@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,27 +41,34 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinContext
+import org.koin.compose.koinInject
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : ComponentActivity() {
 
+    private val mainViewModel by inject<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen().setKeepOnScreenCondition {
+            !mainViewModel.state.value.isLoaded
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         setContent {
             LazyPizzaTheme {
 
-                val mainViewModel = koinViewModel<MainViewModel>()
                 val state by mainViewModel.state.collectAsStateWithLifecycle()
 
                 //Avoid this
                 //No Compose Koin context setup, taking default. Use KoinContext(), KoinAndroidContext() or KoinApplication() function to setup or create Koin context and avoid such message.
                 KoinContext {
-                    AppNavigationRoot(
-                        isLogin = state.isLogin
-                    )
+                    if (state.isLoaded) {
+                        AppNavigationRoot(
+                            isLogin = state.isLogin
+                        )
+                    }
                 }
             }
         }
