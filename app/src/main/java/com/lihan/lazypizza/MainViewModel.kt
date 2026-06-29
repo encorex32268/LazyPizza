@@ -2,6 +2,7 @@ package com.lihan.lazypizza
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lihan.lazypizza.core.domain.CartRepository
 import com.lihan.lazypizza.core.domain.UserDataStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,7 +11,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 class MainViewModel(
-    private val userDataStore: UserDataStore
+    private val userDataStore: UserDataStore,
+    private val cartRepository: CartRepository
 ): ViewModel() {
 
     private val _state = MutableStateFlow(MainState())
@@ -18,6 +20,7 @@ class MainViewModel(
 
     init {
         checkUserStatus()
+        observeCartItemCount()
     }
 
     private fun checkUserStatus(){
@@ -30,5 +33,16 @@ class MainViewModel(
                 ) }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun observeCartItemCount(){
+        cartRepository
+            .getCartItems()
+            .onEach { cartItemWithToppings ->
+                _state.update { it.copy(
+                    cartItemCount = cartItemWithToppings.size
+                ) }
+
+            }.launchIn(viewModelScope)
     }
 }

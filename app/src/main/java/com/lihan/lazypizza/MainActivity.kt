@@ -66,7 +66,8 @@ class MainActivity : ComponentActivity() {
                 KoinContext {
                     if (state.isLoaded) {
                         AppNavigationRoot(
-                            isLogin = state.isLogin
+                            isLogin = state.isLogin,
+                            cartItemCount = state.cartItemCount
                         )
                     }
                 }

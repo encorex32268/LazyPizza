@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -64,15 +65,18 @@ class HistoryViewModel(
             }
             .flatMapLatest {  userId ->
                 delay(500.milliseconds)
+                val isSignIn = userId.isNotEmpty()
                 _state.update { it.copy(
-                    isSignIn = userId.isNotEmpty()
+                    isSignIn = isSignIn,
+                    isLoading = isSignIn
                 ) }
-                if (userId.isNotEmpty()){
+                if (isSignIn){
                     orderRepository.getOrderHistories()
                 }else{
                     emptyFlow()
                 }
-            }.onEach { orderHistories ->
+            }
+            .onEach { orderHistories ->
 
                 val sortedItems = orderHistories.map { orderHistory ->
                     orderHistory.toUi()

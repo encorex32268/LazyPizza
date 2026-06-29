@@ -23,6 +23,7 @@ import com.lihan.lazypizza.menu.presentation.product_detail.ProductDetailRoot
 @Composable
 fun AppNavigationRoot(
     isLogin: Boolean,
+    cartItemCount: Int,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -49,6 +50,7 @@ fun AppNavigationRoot(
                 }?.route ?: Route.Menu
 
                 AppBottomBar(
+                    cartItemCount = cartItemCount,
                     currentRoute = currentRoute,
                     onItemClick = { route ->
                         navController.navigate(route){

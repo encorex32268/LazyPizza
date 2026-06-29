@@ -42,7 +42,6 @@ class CartViewModel(
 
     private val _state = MutableStateFlow(CartState())
     val state = _state.onStart {
-        getRecommendItems()
         if (!hasLoadedInitialData) {
             observeCart()
             hasLoadedInitialData = true
@@ -58,6 +57,10 @@ class CartViewModel(
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = CartState()
     )
+
+    init {
+        getRecommendItems()
+    }
 
 
     fun onAction(action: CartAction) {

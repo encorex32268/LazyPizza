@@ -222,10 +222,10 @@ private fun CartScreen(
                         Box(
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
-                                .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.64f))
+                                .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f))
                                 .height(100.dp)
                                 .fillMaxWidth()
-                                .blur(8.dp)
+                                .blur(4.dp)
                         )
                         Box(
                             modifier = Modifier
@@ -339,7 +339,7 @@ private fun CartScreenPreview() {
             state = CartState(
                 recommendItems = MenuState.fakeProductUiList.shuffled(random = Random(4)),
                 items = items,
-                error = UiText.DynamicString("Error !!")
+                error = null
             ),
             onAction = {}
         )

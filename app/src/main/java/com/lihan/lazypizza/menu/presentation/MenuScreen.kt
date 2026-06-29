@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,6 +76,8 @@ fun MenuScreen(
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
 
+    val filterTypes = remember { ProductType.getFilterTypes() }
+
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -122,7 +125,7 @@ fun MenuScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ProductType.entries.forEach { productType ->
+                filterTypes.forEach { productType ->
                     ProductTypeChip(
                         isSelected = productType in state.productTypes,
                         type = productType,

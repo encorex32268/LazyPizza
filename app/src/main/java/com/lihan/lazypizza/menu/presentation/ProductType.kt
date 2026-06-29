@@ -27,5 +27,9 @@ enum class ProductType {
                 else -> Pizza
             }
         }
+
+        fun getFilterTypes(): List<ProductType>{
+            return ProductType.entries.filter { it != Other }
+        }
     }
 }
