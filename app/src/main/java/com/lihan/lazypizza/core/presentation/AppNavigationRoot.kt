@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.lihan.lazypizza.TestScreen
 import com.lihan.lazypizza.auth.presentation.LoginRoot
 import com.lihan.lazypizza.cart.presentation.CartRoot
 import com.lihan.lazypizza.cart.presentation.CartSharedViewModel
@@ -78,12 +79,18 @@ fun AppNavigationRoot(
                 .padding(padding)
                 .consumeWindowInsets(padding),
             navController = navController,
+//            startDestination = Route.TestComponents,
             startDestination = if(isLogin){
                 Route.MenuGraph
             }else{
                 Route.AuthGraph
             },
         ){
+
+            composable<Route.TestComponents>(){
+                TestScreen()
+            }
+
             navigation<Route.AuthGraph>(
                 startDestination = Route.Login
             ){
@@ -125,7 +132,7 @@ fun AppNavigationRoot(
                 startDestination = Route.Cart
             ){
                 composable<Route.Cart>{
-                    val parentEntry = navController.rememberParentEntry(Route.CartGraph.toRouteName())
+                    val parentEntry = navController.rememberParentEntry<Route.CartGraph>()
                     val cartSharedViewModel = koinViewModel<CartSharedViewModel>(
                         viewModelStoreOwner = parentEntry
                     )
@@ -147,7 +154,7 @@ fun AppNavigationRoot(
                     )
                 }
                 composable<Route.OrderCheckout>{
-                    val parentEntry = navController.rememberParentEntry(Route.CartGraph.toRouteName())
+                    val parentEntry = navController.rememberParentEntry<Route.CartGraph>()
                     val cartSharedViewModel = koinViewModel<CartSharedViewModel>(
                         viewModelStoreOwner = parentEntry
                     )
@@ -192,8 +199,8 @@ fun AppNavigationRoot(
 
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
-fun NavController.rememberParentEntry(route: String): NavBackStackEntry {
+inline fun <reified T : Any> NavController.rememberParentEntry(): NavBackStackEntry {
     return remember(this) {
-        this.getBackStackEntry(route)
+        this.getBackStackEntry<T>()
     }
 }
