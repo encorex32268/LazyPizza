@@ -65,7 +65,12 @@ import com.lihan.lazypizza.core.presentation.ChevronDown
 import com.lihan.lazypizza.core.presentation.ChevronUp
 import com.lihan.lazypizza.core.presentation.components.AppIconBackgroundButton
 import com.lihan.lazypizza.core.presentation.design_system.AppButton
+import com.lihan.lazypizza.core.presentation.design_system.AppDatePicker
+import com.lihan.lazypizza.core.presentation.design_system.AppDatePickerRoot
+import com.lihan.lazypizza.core.presentation.design_system.AppTimePicker
+import com.lihan.lazypizza.core.presentation.design_system.AppTimePickerRoot
 import com.lihan.lazypizza.core.presentation.design_system.ButtonType
+import com.lihan.lazypizza.core.presentation.design_system.rememberAppDatePickerState
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.body1Medium
 import com.lihan.lazypizza.core.presentation.ui.theme.label2Medium
@@ -75,6 +80,8 @@ import com.lihan.lazypizza.core.presentation.ui.theme.textSecondary8
 import com.lihan.lazypizza.menu.presentation.MenuState
 import com.lihan.lazypizza.menu.presentation.ProductType.Companion.toTypeName
 import com.lihan.lazypizza.menu.presentation.product_detail.ProductDetailAction
+import java.time.LocalDate
+import java.time.ZoneId
 import kotlin.random.Random
 
 @Composable
@@ -167,9 +174,9 @@ fun OrderCheckoutScreen(
                         }
                         item {
                             PickUpTime(
-                                pickUpTimeType = PickUpTimeType.ScheduleTime,
-                                onSelected = {
-
+                                pickUpTimeType = state.pickUpTimeType,
+                                onSelected = { type ->
+                                    onAction(OrderCheckoutAction.OnPickupTimeTypeSelect(type))
                                 }
                             )
                         }
@@ -268,11 +275,7 @@ fun OrderCheckoutScreen(
                                 }
                             )
                         }
-
-
                     }
-
-
                 }
             }
             Column(
@@ -308,6 +311,36 @@ fun OrderCheckoutScreen(
                 )
             }
 
+            if (state.isShowDatePicker){
+                AppDatePickerRoot(
+                    state = rememberAppDatePickerState(
+                        initialSelectedDate = LocalDate.now()
+                    ),
+                    onDismissRequest = {
+                        onAction(OrderCheckoutAction.OnDismissDatePicker)
+                    },
+                    onDateConfirm = {
+                        val epochSecond = it.atStartOfDay(ZoneId.systemDefault()).toEpochSecond()
+                        onAction(OrderCheckoutAction.OnDateSelected(epochSecond))
+                    },
+                    onCancel = {
+                        onAction(OrderCheckoutAction.OnDatePickerCancelClick)
+                    }
+                )
+            }
+            if (state.isShowTimePicker){
+                AppTimePickerRoot(
+                    onDismissRequest = {
+                        onAction(OrderCheckoutAction.OnDismissTimePicker)
+                    },
+                    onTimeConfirm = {
+                        onAction(OrderCheckoutAction.OnTimeSelected(it))
+                    },
+                    onCancel = {
+                        onAction(OrderCheckoutAction.OnTimePickerCancelClick)
+                    }
+                )
+            }
         }
     }
 }
@@ -318,7 +351,9 @@ private fun Preview() {
     LazyPizzaTheme {
         OrderCheckoutScreen(
             state = OrderCheckoutState(
-                isExpandDetail = false
+                isExpandDetail = false,
+                isShowDatePicker = false,
+
             ),
             onAction = {},
             sharedState = CartSharedState(

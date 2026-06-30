@@ -25,7 +25,7 @@ fun PickUpTime(
         PickupRadioButton(
             isSelected = pickUpTimeType == PickUpTimeType.EarliestAvailableTime,
             onSelected = {
-                onSelected(pickUpTimeType)
+                onSelected(PickUpTimeType.EarliestAvailableTime)
             },
             optionName = stringResource(R.string.order_checkout_pickup_earliest_available_time),
             modifier = Modifier.fillMaxWidth()
@@ -33,7 +33,7 @@ fun PickUpTime(
         PickupRadioButton(
             isSelected = pickUpTimeType == PickUpTimeType.ScheduleTime,
             onSelected = {
-                onSelected(pickUpTimeType)
+                onSelected(PickUpTimeType.ScheduleTime)
             },
             optionName = stringResource(R.string.order_checkout_pickup_schedule_time),
             modifier = Modifier.fillMaxWidth()
