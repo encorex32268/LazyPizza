@@ -162,6 +162,15 @@ val Typography.body4Regular: TextStyle
         lineHeight = 16.sp
     )
 
+
+val Typography.medium: TextStyle
+    get() = TextStyle(
+        fontFamily = InstrumentSans,
+        fontWeight = FontWeight.Medium,
+        fontSize = 44.sp,
+        lineHeight = 48.sp
+    )
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     titleLarge = TextStyle(

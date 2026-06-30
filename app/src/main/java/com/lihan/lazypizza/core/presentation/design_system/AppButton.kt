@@ -56,7 +56,7 @@ fun AppButton(
             Box(
                 modifier = modifier
                     .clip(RoundedCornerShape(100))
-                    .background(gradientBrush)
+                    .background(gradientBrush,RoundedCornerShape(100))
                     .clickable(
                         enabled = enabled,
                         onClick = onClick
@@ -65,7 +65,6 @@ fun AppButton(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    modifier = Modifier.padding(vertical = 6.dp),
                     text = text,
                     style = MaterialTheme.typography.title3,
                     color = if (enabled) {
