@@ -12,22 +12,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.input.InputTransformation
-import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.byValue
-import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
@@ -55,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lihan.lazypizza.R
+import com.lihan.lazypizza.core.domain.util.TimeUtil
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.label2SemiBold
 import com.lihan.lazypizza.core.presentation.ui.theme.medium
@@ -62,33 +55,11 @@ import com.lihan.lazypizza.core.presentation.ui.theme.outline50
 import com.lihan.lazypizza.core.presentation.ui.theme.surfaceHigher
 import com.lihan.lazypizza.core.presentation.ui.theme.surfaceHighest
 import com.lihan.lazypizza.core.presentation.ui.theme.title4
-import io.ktor.util.Hash.combine
+import com.lihan.lazypizza.core.presentation.util.hourTransformation
+import com.lihan.lazypizza.core.presentation.util.minuteTransformation
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
-import java.time.LocalTime
 import java.util.Locale
-
-
-
-private object TimeUtil {
-    fun getNowHour(): String = LocalTime.now().hour.toString()
-    fun getNowMinute(): String = LocalTime.now().minute.toString()
-}
-
-val hourTransformation = InputTransformation {
-    val newText = asCharSequence().toString()
-    // 如果不合法，拒絕這次的變更 (呼叫 revertChanges)
-    if (!limitTimeInput(originalText.toString(), newText, maxVal = 23)) {
-        revertAllChanges()
-    }
-}
-
-val minuteTransformation = InputTransformation {
-    val newText = asCharSequence().toString()
-    if (!limitTimeInput(originalText.toString(), newText, maxVal = 59)) {
-        revertAllChanges()
-    }
-}
 
 @Composable
 fun AppTimePickerRoot(
@@ -142,7 +113,6 @@ fun AppTimePicker(
                 val modifiedMinute =
                     String.format(locale = Locale.getDefault(), "%02d", minute.toIntOrNull() ?: 0)
 
-                println("modifiedMinute>> ${modifiedMinute}")
                 val timeInt = (hourText + modifiedMinute).toInt()
 
                 isShowError = timeInt !in 1015..2145
@@ -336,21 +306,6 @@ private fun TimeTextField(
 
 }
 
-private fun limitTimeInput(
-    currentText: String,
-    newText: String,
-    maxVal: Int
-): Boolean {
-
-    if (newText.isEmpty()) return true
-
-    if (!newText.all { it.isDigit() }) return false
-
-    if (newText.length > 2) return false
-
-    val value = newText.toIntOrNull() ?: 0
-    return value <= maxVal
-}
 
 
 @Preview(showBackground = true)
