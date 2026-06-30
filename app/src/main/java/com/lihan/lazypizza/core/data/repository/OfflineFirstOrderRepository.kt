@@ -14,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 
 class OfflineFirstOrderRepository(
     private val orderDao: OrderDao,
@@ -32,7 +31,6 @@ class OfflineFirstOrderRepository(
 
     override suspend fun fetchOrderHistories() {
         val remoteData = firebaseRemoteDataSource.getOrderHistories()
-        println("fetch: ${remoteData}")
         withContext(Dispatchers.IO){
             orderDao.updateOrderHistories(
                 orderHistoryEntities = remoteData.map { it.toEntity() }

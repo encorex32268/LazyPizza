@@ -2,7 +2,6 @@ package com.lihan.lazypizza.menu.presentation.model
 
 import com.lihan.lazypizza.core.domain.formatToTwoDecimals
 import com.lihan.lazypizza.menu.presentation.ProductType
-import java.util.Locale.getDefault
 
 data class ProductUi(
     val id: String,

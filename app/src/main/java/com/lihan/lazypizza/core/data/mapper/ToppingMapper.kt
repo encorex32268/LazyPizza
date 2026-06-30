@@ -1,9 +1,7 @@
 package com.lihan.lazypizza.core.data.mapper
 
 import com.lihan.lazypizza.core.data.local.CartItemToppingEntity
-import com.lihan.lazypizza.core.data.local.ProductEntity
 import com.lihan.lazypizza.core.data.local.ToppingEntity
-import com.lihan.lazypizza.core.data.model.ProductDto
 import com.lihan.lazypizza.core.data.model.ToppingDto
 import com.lihan.lazypizza.core.domain.model.Topping
 

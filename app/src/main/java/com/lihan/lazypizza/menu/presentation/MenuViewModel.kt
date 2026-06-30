@@ -7,7 +7,7 @@ import com.lihan.lazypizza.auth.presentation.util.FirebaseAuthManager
 import com.lihan.lazypizza.core.domain.CartRepository
 import com.lihan.lazypizza.core.domain.StoreProductRepository
 import com.lihan.lazypizza.core.domain.UserDataStore
-import com.lihan.lazypizza.menu.presentation.MenuUiEvent.*
+import com.lihan.lazypizza.menu.presentation.MenuUiEvent.OnNavigateToDetail
 import com.lihan.lazypizza.menu.presentation.mapper.toCartItem
 import com.lihan.lazypizza.menu.presentation.mapper.toUi
 import com.lihan.lazypizza.menu.presentation.model.ProductUi

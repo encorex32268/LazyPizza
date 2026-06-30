@@ -12,11 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -36,8 +33,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.cart.presentation.components.CartItemList
 import com.lihan.lazypizza.cart.presentation.components.RecommendList
-import com.lihan.lazypizza.cart.presentation.components.RecommendProductCard
-import com.lihan.lazypizza.core.domain.formatToTwoDecimals
 import com.lihan.lazypizza.core.presentation.components.AppDialog
 import com.lihan.lazypizza.core.presentation.components.PlaceholderView
 import com.lihan.lazypizza.core.presentation.design_system.AppButton

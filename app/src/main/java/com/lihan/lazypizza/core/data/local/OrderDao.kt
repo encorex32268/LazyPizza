@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
-import com.lihan.lazypizza.core.domain.model.OrderHistory
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -7,19 +7,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lihan.lazypizza.R
-import com.lihan.lazypizza.core.presentation.ArrowLeft
 import com.lihan.lazypizza.core.presentation.LogOut
 import com.lihan.lazypizza.core.presentation.Phone
 import com.lihan.lazypizza.core.presentation.User
@@ -39,7 +32,6 @@ import com.lihan.lazypizza.core.presentation.ui.theme.body1Regular
 import com.lihan.lazypizza.core.presentation.ui.theme.body3Bold
 import com.lihan.lazypizza.core.presentation.ui.theme.primary8
 import com.lihan.lazypizza.core.presentation.ui.theme.textSecondary8
-import com.lihan.lazypizza.menu.presentation.product_detail.ProductDetailAction
 
 @Composable
 fun MenuTopbar(

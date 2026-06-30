@@ -1,26 +1,16 @@
 package com.lihan.lazypizza.core.data.repository
 
-import com.google.firebase.firestore.FirebaseFirestore
 import com.lihan.lazypizza.core.data.local.ProductDao
 import com.lihan.lazypizza.core.data.local.ToppingDao
 import com.lihan.lazypizza.core.data.mapper.toDomain
 import com.lihan.lazypizza.core.data.mapper.toEntity
-import com.lihan.lazypizza.core.data.model.ProductDto
-import com.lihan.lazypizza.core.data.model.ToppingDto
 import com.lihan.lazypizza.core.domain.RemoteDataSource
 import com.lihan.lazypizza.core.domain.StoreProductRepository
 import com.lihan.lazypizza.core.domain.model.Product
 import com.lihan.lazypizza.core.domain.model.Topping
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.supervisorScope
-import kotlinx.coroutines.tasks.await
-import kotlin.collections.map
-import kotlin.coroutines.coroutineContext
 
 class OfflineFirstStoreProductRepository(
     private val remoteDataSource: RemoteDataSource,

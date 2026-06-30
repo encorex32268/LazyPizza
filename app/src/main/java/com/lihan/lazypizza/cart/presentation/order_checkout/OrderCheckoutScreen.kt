@@ -2,9 +2,6 @@
 
 package com.lihan.lazypizza.cart.presentation.order_checkout
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,11 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -31,12 +25,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
@@ -54,20 +46,14 @@ import com.lihan.lazypizza.cart.presentation.CartSharedState
 import com.lihan.lazypizza.cart.presentation.CartSharedViewModel
 import com.lihan.lazypizza.cart.presentation.components.CartItemList
 import com.lihan.lazypizza.cart.presentation.components.RecommendList
-import com.lihan.lazypizza.cart.presentation.components.RecommendProductCard
 import com.lihan.lazypizza.cart.presentation.order_checkout.components.CommentTextField
 import com.lihan.lazypizza.cart.presentation.order_checkout.components.PickUpTime
-import com.lihan.lazypizza.cart.presentation.order_checkout.components.PickupRadioButton
-import com.lihan.lazypizza.cart.presentation.order_checkout.util.PickUpTimeType
-import com.lihan.lazypizza.core.domain.formatToTwoDecimals
 import com.lihan.lazypizza.core.presentation.ArrowLeft
 import com.lihan.lazypizza.core.presentation.ChevronDown
 import com.lihan.lazypizza.core.presentation.ChevronUp
 import com.lihan.lazypizza.core.presentation.components.AppIconBackgroundButton
 import com.lihan.lazypizza.core.presentation.design_system.AppButton
-import com.lihan.lazypizza.core.presentation.design_system.AppDatePicker
 import com.lihan.lazypizza.core.presentation.design_system.AppDatePickerRoot
-import com.lihan.lazypizza.core.presentation.design_system.AppTimePicker
 import com.lihan.lazypizza.core.presentation.design_system.AppTimePickerRoot
 import com.lihan.lazypizza.core.presentation.design_system.ButtonType
 import com.lihan.lazypizza.core.presentation.design_system.rememberAppDatePickerState
@@ -78,8 +64,6 @@ import com.lihan.lazypizza.core.presentation.ui.theme.label2SemiBold
 import com.lihan.lazypizza.core.presentation.ui.theme.outline50
 import com.lihan.lazypizza.core.presentation.ui.theme.textSecondary8
 import com.lihan.lazypizza.menu.presentation.MenuState
-import com.lihan.lazypizza.menu.presentation.ProductType.Companion.toTypeName
-import com.lihan.lazypizza.menu.presentation.product_detail.ProductDetailAction
 import java.time.LocalDate
 import java.time.ZoneId
 import kotlin.random.Random

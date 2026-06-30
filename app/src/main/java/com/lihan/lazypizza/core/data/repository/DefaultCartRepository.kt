@@ -7,8 +7,6 @@ import com.lihan.lazypizza.core.domain.CartRepository
 import com.lihan.lazypizza.core.domain.model.CartItem
 import com.lihan.lazypizza.core.domain.model.CartItemTopping
 import com.lihan.lazypizza.core.domain.model.CartItemWithToppings
-import com.lihan.lazypizza.core.domain.model.Product
-import com.lihan.lazypizza.core.domain.model.Topping
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

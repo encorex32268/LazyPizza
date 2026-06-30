@@ -1,13 +1,10 @@
 package com.lihan.lazypizza.auth.presentation
 
 import android.app.Activity
-import android.util.Log
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.play.integrity.internal.ac
 import com.lihan.lazypizza.auth.domain.PhoneNumberVerify
 import com.lihan.lazypizza.auth.presentation.util.FirebaseAuthManager
 import com.lihan.lazypizza.auth.presentation.util.PhoneAuthResult
@@ -17,12 +14,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -109,7 +104,6 @@ class LoginViewModel(
 
             val verificationId = userDataStore.getVerificationId().first()
             if (verificationId.isEmpty()) {
-                println("VerificationId is empty !")
                 return@launch
             }
 
@@ -130,9 +124,7 @@ class LoginViewModel(
                 is PhoneAuthResult.Verified -> {
                     val firebaseUser = result.user
                     userDataStore.setUserId(firebaseUser.uid)
-                    println("UserId: ${firebaseUser.uid} Saved ! ")
                     firebaseUser.phoneNumber?.let {
-                        println("PhoNumber: $it Saved ! ")
                         userDataStore.setUserPhoneNumber(it)
                     }
                     delay(300L)
@@ -186,7 +178,6 @@ class LoginViewModel(
 
                 is PhoneAuthResult.Verified -> {
                     //TODO: Send UiEvent Navigate To Menu
-                    println("Verified: User PhoneNumber ${phoneAuthResult.user.phoneNumber}")
                     _uiEvent.send(LoginUiEvent.VerifySucceed)
                 }
 

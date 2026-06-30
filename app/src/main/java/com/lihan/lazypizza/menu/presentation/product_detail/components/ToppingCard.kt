@@ -20,12 +20,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lihan.lazypizza.core.domain.formatToTwoDecimals2
 import com.lihan.lazypizza.core.presentation.components.AppAsyncImage
+import com.lihan.lazypizza.core.presentation.components.ItemCounter
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.body3Regular
 import com.lihan.lazypizza.core.presentation.ui.theme.primary8
 import com.lihan.lazypizza.core.presentation.ui.theme.surfaceHigher
 import com.lihan.lazypizza.core.presentation.ui.theme.title2
-import com.lihan.lazypizza.core.presentation.components.ItemCounter
 import com.lihan.lazypizza.menu.presentation.model.ToppingUi
 
 @Composable

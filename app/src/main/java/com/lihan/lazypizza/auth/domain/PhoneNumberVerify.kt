@@ -9,13 +9,9 @@ object PhoneNumberVerify {
     fun verify(phoneNumber: String): Boolean {
         val locale: Locale = Locale.getDefault()
         val countryCode = locale.country.ifBlank { "US" }
-        println("PhoneNumberVerify Locale: $locale")
-        println("PhoneNumberVerify Locale: $countryCode")
-        println("PhoneNumberVerify ${phoneNumber}")
         val phoneUtil = PhoneNumberUtil.getInstance()
         return try {
             val cleanNumber = phoneNumber.filter { it.isDigit() || it == '+' }
-            println("PhoneNumberVerify cleanNumber ${cleanNumber}")
             val numberProto = phoneUtil.parse(cleanNumber, countryCode)
 
             phoneUtil.isValidNumber(numberProto)

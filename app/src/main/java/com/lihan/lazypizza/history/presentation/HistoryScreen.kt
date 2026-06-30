@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -30,13 +29,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.android.play.integrity.internal.ac
-import org.koin.androidx.compose.koinViewModel
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.core.presentation.components.PlaceholderView
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.body1Medium
 import com.lihan.lazypizza.history.presentation.components.HistoryItemCard
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HistoryRoot(

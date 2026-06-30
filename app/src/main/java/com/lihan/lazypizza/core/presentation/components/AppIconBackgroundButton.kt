@@ -1,7 +1,6 @@
 package com.lihan.lazypizza.core.presentation.components
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -14,17 +13,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.lihan.lazypizza.R
 import com.lihan.lazypizza.core.presentation.ArrowLeft
-import com.lihan.lazypizza.core.presentation.LogOut
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.primary8
 import com.lihan.lazypizza.core.presentation.ui.theme.textSecondary8
-import com.lihan.lazypizza.menu.presentation.product_detail.ProductDetailAction
 
 @Composable
 fun AppIconBackgroundButton(

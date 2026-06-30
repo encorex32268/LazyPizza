@@ -15,7 +15,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import kotlin.collections.map
 
 class FirebaseRemoteDataSource(
     private val firebaseFirestore: FirebaseFirestore

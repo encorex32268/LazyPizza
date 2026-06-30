@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.koin.androidx.compose.koinViewModel
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.auth.presentation.components.PhoneNumberTextField
 import com.lihan.lazypizza.auth.presentation.components.SecureTextFields
@@ -34,9 +33,9 @@ import com.lihan.lazypizza.core.presentation.design_system.AppButton
 import com.lihan.lazypizza.core.presentation.design_system.ButtonType
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.body3Regular
-import com.lihan.lazypizza.core.presentation.ui.theme.textSecondary8
 import com.lihan.lazypizza.core.presentation.ui.theme.title1Medium
 import com.lihan.lazypizza.core.presentation.util.ObserveAsEvents
+import org.koin.androidx.compose.koinViewModel
 import kotlin.time.Duration
 
 @Composable

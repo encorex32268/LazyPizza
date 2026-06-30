@@ -1,7 +1,5 @@
 package com.lihan.lazypizza.history.presentation.model
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import com.lihan.lazypizza.R
 
 enum class OrderStatus {

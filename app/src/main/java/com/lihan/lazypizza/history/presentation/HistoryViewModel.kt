@@ -7,17 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.lihan.lazypizza.core.domain.OrderRepository
 import com.lihan.lazypizza.core.domain.UserDataStore
 import com.lihan.lazypizza.history.presentation.mapper.toUi
-import com.lihan.lazypizza.history.presentation.model.OrderHistoryUi
-import io.ktor.util.Hash.combine
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn

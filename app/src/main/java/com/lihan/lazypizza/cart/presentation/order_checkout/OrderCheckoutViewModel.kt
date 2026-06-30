@@ -2,7 +2,6 @@ package com.lihan.lazypizza.cart.presentation.order_checkout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.play.integrity.internal.ac
 import com.lihan.lazypizza.cart.presentation.order_checkout.util.PickUpTimeType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
