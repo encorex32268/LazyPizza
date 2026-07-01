@@ -17,11 +17,11 @@ import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
 
-    private val mainViewModel by inject<MainViewModel>()
+    private val viewModel by inject<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().setKeepOnScreenCondition {
-            !mainViewModel.state.value.isLoaded
+            !viewModel.state.value.isLoaded
         }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             LazyPizzaTheme {
 
-                val state by mainViewModel.state.collectAsStateWithLifecycle()
+                val state by viewModel.state.collectAsStateWithLifecycle()
 
                 //Avoid this
                 //No Compose Koin context setup, taking default. Use KoinContext(), KoinAndroidContext() or KoinApplication() function to setup or create Koin context and avoid such message.
