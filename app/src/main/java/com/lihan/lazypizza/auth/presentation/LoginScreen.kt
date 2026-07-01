@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.auth.presentation.components.PhoneNumberTextField
 import com.lihan.lazypizza.auth.presentation.components.SecureTextFields
+import com.lihan.lazypizza.core.presentation.TrackScreenViewEvent
 import com.lihan.lazypizza.core.presentation.design_system.AppButton
 import com.lihan.lazypizza.core.presentation.design_system.ButtonType
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
@@ -70,7 +71,7 @@ private fun LoginScreen(
 
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
-
+    TrackScreenViewEvent("LoginScreen")
     BackHandler(
         onBack = {
             onAction(LoginAction.OnRefresh)

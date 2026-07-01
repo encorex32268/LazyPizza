@@ -34,6 +34,7 @@ import com.lihan.lazypizza.R
 import com.lihan.lazypizza.cart.presentation.components.CartItemList
 import com.lihan.lazypizza.cart.presentation.components.RecommendList
 import com.lihan.lazypizza.cart.presentation.components.RecommendListRow
+import com.lihan.lazypizza.core.presentation.TrackScreenViewEvent
 import com.lihan.lazypizza.core.presentation.components.AppDialog
 import com.lihan.lazypizza.core.presentation.components.PlaceholderView
 import com.lihan.lazypizza.core.presentation.design_system.AppButton
@@ -69,6 +70,7 @@ private fun CartScreen(
     onProceedToCheckoutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    TrackScreenViewEvent("CartScreen")
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {

@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lihan.lazypizza.R
+import com.lihan.lazypizza.core.presentation.TrackScreenViewEvent
 import com.lihan.lazypizza.core.presentation.components.PlaceholderView
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.core.presentation.ui.theme.body1Medium
@@ -62,6 +63,7 @@ fun HistoryScreen(
     onAction: (HistoryAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    TrackScreenViewEvent("HistoryScreen")
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {

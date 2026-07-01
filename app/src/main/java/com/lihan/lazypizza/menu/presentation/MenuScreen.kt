@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.core.domain.formatToTwoDecimals
+import com.lihan.lazypizza.core.presentation.TrackScreenViewEvent
 import com.lihan.lazypizza.core.presentation.components.AppDialog
 import com.lihan.lazypizza.core.presentation.components.ProductCard
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
@@ -75,7 +76,7 @@ fun MenuScreen(
     val keyboard = LocalSoftwareKeyboardController.current
 
     val filterTypes = remember { ProductType.getFilterTypes() }
-
+    TrackScreenViewEvent("MenuScreen")
     Scaffold(
         modifier = modifier
             .fillMaxSize()
