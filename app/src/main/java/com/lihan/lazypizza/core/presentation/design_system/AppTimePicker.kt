@@ -225,7 +225,6 @@ fun AppTimePicker(
                         val minutes = minuteTextFieldState.text.toString()
                         if (hour.isNotEmpty() && minutes.isNotEmpty()) {
                             onTimeConfirm("$hour:$minutes")
-                            onDismissRequest()
                         }
                     },
                     type = ButtonType.Filled,
