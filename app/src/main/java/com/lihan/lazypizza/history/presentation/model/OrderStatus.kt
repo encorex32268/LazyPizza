@@ -14,8 +14,8 @@ enum class OrderStatus {
         }
         fun OrderStatus.toStringResourceId(): Int{
             return when(this){
-                InProgress -> R.string.in_progress
-                Completed -> R.string.completed
+                InProgress -> R.string.order_in_progress
+                Completed -> R.string.order_completed
             }
         }
     }

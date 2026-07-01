@@ -41,8 +41,8 @@
     <string name="cancel">Cancel</string>
     <string name="store_phone_number">+1 (555) 321-7890</string>
     <string name="go_to_menu">Go to Menu</string>
-    <string name="in_progress">In Progress</string>
-    <string name="completed">Completed</string>
+    <string name="order_in_progress">In Progress</string>
+    <string name="order_completed">Completed</string>
     <string name="order_number">Order #%1$s</string>
     <string name="order_checkout_order_number">ORDER NUMBER:</string>
     <string name="order_checkout_pickup_time">PICKUP TIME:</string>
