@@ -143,13 +143,7 @@ fun AppNavigationRoot(
                         },
                         sharedViewModel = cartSharedViewModel,
                         onBackToMenu = {
-                            navController.navigate(Route.Menu){
-                                popUpTo(Route.Menu) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                            navController.backToMenu()
                         }
                     )
                 }
@@ -160,7 +154,10 @@ fun AppNavigationRoot(
                     )
                     OrderCheckoutRoot(
                         sharedViewModel = cartSharedViewModel,
-                        onBack = { navController.navigateUp() }
+                        onBack = { navController.navigateUp() },
+                        onNavigateToMenu = {
+                            navController.backToMenu()
+                        }
                     )
                 }
 
@@ -172,13 +169,7 @@ fun AppNavigationRoot(
                 composable<Route.History>{
                     HistoryRoot(
                         navigateToMenu = {
-                            navController.navigate(Route.Menu){
-                                popUpTo(Route.Menu) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                            navController.backToMenu()
                         },
                         navigateToLogin = {
                             navController.navigate(Route.AuthGraph){
@@ -194,6 +185,16 @@ fun AppNavigationRoot(
             }
         }
 
+    }
+}
+
+private fun NavHostController.backToMenu() {
+    this.navigate(Route.Menu) {
+        popUpTo(Route.Menu) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
     }
 }
 
