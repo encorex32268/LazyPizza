@@ -55,7 +55,7 @@ class MenuViewModel(
             if (cartItem != null) {
                 productUi.copy(
                     count = cartItem.cartItem.quantity,
-                    isEditingMode = true
+                    isEditingMode = productUi.type != ProductType.Pizza
                 )
             } else {
                 productUi.copy(
