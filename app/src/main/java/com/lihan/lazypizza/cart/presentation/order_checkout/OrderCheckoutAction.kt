@@ -1,5 +1,7 @@
 package com.lihan.lazypizza.cart.presentation.order_checkout
 
+import android.content.Context
+import com.lihan.lazypizza.cart.presentation.model.CartItemWithToppingsUi
 import com.lihan.lazypizza.cart.presentation.order_checkout.util.PickUpTimeType
 import java.time.LocalDate
 
@@ -13,4 +15,6 @@ sealed interface OrderCheckoutAction {
     data class OnDateSelected(val dateLocalDate: LocalDate): OrderCheckoutAction
     data class OnTimeSelected(val time: String): OrderCheckoutAction
     data class OnPickupTimeTypeSelect(val type: PickUpTimeType): OrderCheckoutAction
+    data object OnNavigateToMenu: OrderCheckoutAction
+    data class OnPlaceOrderClick(val cartItems: List<CartItemWithToppingsUi>,val pickupTime: String?=null): OrderCheckoutAction
 }

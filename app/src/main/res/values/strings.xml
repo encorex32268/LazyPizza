@@ -44,6 +44,8 @@
     <string name="in_progress">In Progress</string>
     <string name="completed">Completed</string>
     <string name="order_number">Order #%1$s</string>
+    <string name="order_checkout_order_number">ORDER NUMBER:</string>
+    <string name="order_checkout_pickup_time">PICKUP TIME:</string>
     <string name="total_amount">Total amount:</string>
     <string name="error_order_canceled">This order was canceled.</string>
     <string name="error_order_failed">Order failed ! Please try again.</string>
@@ -66,4 +68,6 @@
     <string name="hour">Hour</string>
     <string name="minute">Minute</string>
     <string name="timepicker_error_message">Pickup available between 10:15 and 21:45</string>
+    <string name="your_order_has_been_placed">Your order has been placed!</string>
+    <string name="thank_you_order">Thank you for your order! Please come at \n the indicated time.</string>
 </resources>

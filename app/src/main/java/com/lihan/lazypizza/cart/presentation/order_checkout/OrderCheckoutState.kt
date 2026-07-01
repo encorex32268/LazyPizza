@@ -12,4 +12,7 @@ data class OrderCheckoutState(
     val dateLocalDate: LocalDate = LocalDate.now(),
     val time: String = "",
     val pickUpTime: UiText?=null,
+    val placedPickUpTime: UiText?=null,
+    val isSentOrder: Boolean = false,
+    val orderNumber: String = ""
 )
