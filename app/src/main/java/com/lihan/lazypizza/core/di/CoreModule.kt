@@ -4,7 +4,9 @@ import androidx.room.Room
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.lihan.lazypizza.MainViewModel
-import com.lihan.lazypizza.core.data.DefaultUserDataStore
+import com.lihan.lazypizza.core.analytics.AnalyticsHelper
+import com.lihan.lazypizza.core.analytics.StandardAnalytics
+import com.lihan.lazypizza.core.data.repository.DefaultUserDataStore
 import com.lihan.lazypizza.core.data.local.LazyPizzaDatabase
 import com.lihan.lazypizza.core.data.repository.DefaultCartRepository
 import com.lihan.lazypizza.core.data.repository.FirebaseRemoteDataSource
@@ -45,6 +47,8 @@ val coreModule = module {
     singleOf(::OfflineFirstStoreProductRepository).bind<StoreProductRepository>()
     singleOf(::DefaultCartRepository).bind<CartRepository>()
     singleOf(::OfflineFirstOrderRepository).bind<OrderRepository>()
+
+    singleOf(::StandardAnalytics).bind<AnalyticsHelper>()
 
     viewModelOf(::MainViewModel)
 

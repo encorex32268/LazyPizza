@@ -4,6 +4,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
+import com.lihan.lazypizza.core.analytics.AnalyticsHelper
 import com.lihan.lazypizza.core.data.model.OrderDto
 import com.lihan.lazypizza.core.data.model.ProductDto
 import com.lihan.lazypizza.core.data.model.ToppingDto
@@ -17,7 +18,8 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class FirebaseRemoteDataSource(
-    private val firebaseFirestore: FirebaseFirestore
+    private val firebaseFirestore: FirebaseFirestore,
+    private val analyticsHelper: AnalyticsHelper
 ): RemoteDataSource {
 
     override suspend fun getOrderHistories(): List<OrderDto> {
@@ -65,14 +67,23 @@ class FirebaseRemoteDataSource(
                 .document(newOrderRef.id)
                 .set(modifiedOrderHistory)
                 .addOnSuccessListener {
+                    analyticsHelper.logCreateOrder(
+                        result = "success",
+                        data = modifiedOrderHistory
+                    )
                     trySend(Result.Success(Unit))
                     close()
                 }
                 .addOnCanceledListener {
+                    analyticsHelper.logCreateOrder(result = "canceled")
                     trySend(Result.Error(RemoteError.CreateOrderCanceled))
                     close()
                 }
                 .addOnFailureListener {
+                    analyticsHelper.logCreateOrder(
+                        result = "failed",
+                        data = it.message
+                    )
                     trySend(Result.Error(RemoteError.CreateOrderFailed))
                     close()
                 }

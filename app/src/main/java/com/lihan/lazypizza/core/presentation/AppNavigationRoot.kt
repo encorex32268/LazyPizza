@@ -23,6 +23,7 @@ import com.lihan.lazypizza.auth.presentation.LoginRoot
 import com.lihan.lazypizza.cart.presentation.CartRoot
 import com.lihan.lazypizza.cart.presentation.CartSharedViewModel
 import com.lihan.lazypizza.cart.presentation.order_checkout.OrderCheckoutRoot
+import com.lihan.lazypizza.core.analytics.LocalAnalyticsHelper
 import com.lihan.lazypizza.history.presentation.HistoryRoot
 import com.lihan.lazypizza.menu.presentation.MenuRoot
 import com.lihan.lazypizza.menu.presentation.product_detail.ProductDetailRoot

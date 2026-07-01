@@ -6,9 +6,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.lihan.lazypizza.core.analytics.AnalyticsHelper
+import com.lihan.lazypizza.core.analytics.LocalAnalyticsHelper
 import com.lihan.lazypizza.core.presentation.AppNavigationRoot
 import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,6 +22,8 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel by inject<MainViewModel>()
 
+    private val analyticsHelper by inject<AnalyticsHelper>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().setKeepOnScreenCondition {
             !viewModel.state.value.isLoaded
@@ -27,20 +32,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            LazyPizzaTheme {
-
-                val state by viewModel.state.collectAsStateWithLifecycle()
-
-                //Avoid this
-                //No Compose Koin context setup, taking default. Use KoinContext(), KoinAndroidContext() or KoinApplication() function to setup or create Koin context and avoid such message.
-                KoinContext {
-                    if (state.isLoaded) {
-                        AppNavigationRoot(
-                            isLogin = state.isLogin,
-                            cartItemCount = state.cartItemCount
-                        )
+            CompositionLocalProvider(LocalAnalyticsHelper provides analyticsHelper) {
+                LazyPizzaTheme {
+                    val state by viewModel.state.collectAsStateWithLifecycle()
+                    //Avoid this
+                    //No Compose Koin context setup, taking default. Use KoinContext(), KoinAndroidContext() or KoinApplication() function to setup or create Koin context and avoid such message.
+                    KoinContext {
+                        if (state.isLoaded) {
+                            AppNavigationRoot(
+                                isLogin = state.isLogin,
+                                cartItemCount = state.cartItemCount
+                            )
+                        }
                     }
                 }
+
             }
         }
     }

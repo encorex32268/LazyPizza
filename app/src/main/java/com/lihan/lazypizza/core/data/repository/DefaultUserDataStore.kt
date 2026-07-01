@@ -1,4 +1,4 @@
-package com.lihan.lazypizza.core.data
+package com.lihan.lazypizza.core.data.repository
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.lihan.lazypizza.core.analytics.AnalyticsHelper
 import com.lihan.lazypizza.core.domain.UserDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -15,7 +16,8 @@ import kotlinx.coroutines.flow.map
 private val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
 class DefaultUserDataStore(
-    private val context: Context
+    private val context: Context,
+    private val analyticsHelper: AnalyticsHelper
 ): UserDataStore {
 
     companion object {
@@ -39,6 +41,7 @@ class DefaultUserDataStore(
     }
 
     override suspend fun setOrderId(value: Int) {
+        analyticsHelper.logOrderId(value.toString())
         context.userDataStore.edit { preferences ->
             preferences[KEY_ORDER_ID] = value
         }
@@ -63,6 +66,7 @@ class DefaultUserDataStore(
     }
 
     override suspend fun setUserId(value: String) {
+        analyticsHelper.logUserId(value)
         context.userDataStore.edit { preferences ->
             preferences[KEY_USER_ID] = value
         }
@@ -75,6 +79,7 @@ class DefaultUserDataStore(
     }
 
     override suspend fun setUserPhoneNumber(phoneNumber: String) {
+        analyticsHelper.logUserPhoneNumber(phoneNumber)
         context.userDataStore.edit { preferences ->
             preferences[KEY_PHONE_NUMBER] = phoneNumber
         }
