@@ -33,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lihan.lazypizza.R
 import com.lihan.lazypizza.cart.presentation.components.CartItemList
 import com.lihan.lazypizza.cart.presentation.components.RecommendList
+import com.lihan.lazypizza.cart.presentation.components.RecommendListRow
 import com.lihan.lazypizza.core.presentation.components.AppDialog
 import com.lihan.lazypizza.core.presentation.components.PlaceholderView
 import com.lihan.lazypizza.core.presentation.design_system.AppButton
@@ -137,18 +138,18 @@ private fun CartScreen(
                                     }
                                 )
 
-                                item{
-                                    Spacer(Modifier.height(20.dp))
-                                    Text(
-                                        text = stringResource(R.string.recommended_to_add_your_order),
-                                        style = MaterialTheme.typography.label2SemiBold.copy(
-                                            color = MaterialTheme.colorScheme.secondary
+                                if (sharedState.recommendItems.isNotEmpty()) {
+                                    item {
+                                        Spacer(Modifier.height(20.dp))
+                                        Text(
+                                            text = stringResource(R.string.recommended_to_add_your_order),
+                                            style = MaterialTheme.typography.label2SemiBold.copy(
+                                                color = MaterialTheme.colorScheme.secondary
+                                            )
                                         )
-                                    )
-                                    Spacer(Modifier.height(8.dp))
-                                }
-                                item {
-                                    RecommendList(
+                                        Spacer(Modifier.height(8.dp))
+                                    }
+                                    RecommendListRow(
                                         recommendItems = sharedState.recommendItems,
                                         onAddClick = { id ->
                                             onSharedAction(CartSharedAction.OnAddItemClick(id))

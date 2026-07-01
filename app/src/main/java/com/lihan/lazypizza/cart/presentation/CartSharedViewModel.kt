@@ -110,6 +110,7 @@ class CartSharedViewModel(
                         items = cartItemWithToppingsUis
                     )
                 }
+
             }
             .launchIn(viewModelScope)
     }

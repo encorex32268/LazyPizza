@@ -2,6 +2,7 @@
 
 package com.lihan.lazypizza.cart.presentation.order_checkout
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,9 +47,10 @@ import com.lihan.lazypizza.cart.presentation.CartSharedAction
 import com.lihan.lazypizza.cart.presentation.CartSharedState
 import com.lihan.lazypizza.cart.presentation.CartSharedViewModel
 import com.lihan.lazypizza.cart.presentation.components.CartItemList
-import com.lihan.lazypizza.cart.presentation.components.RecommendList
+import com.lihan.lazypizza.cart.presentation.components.RecommendListRow
 import com.lihan.lazypizza.cart.presentation.order_checkout.components.CommentTextField
-import com.lihan.lazypizza.cart.presentation.order_checkout.components.PickUpTime
+import com.lihan.lazypizza.cart.presentation.order_checkout.components.PickUpTimeSection
+import com.lihan.lazypizza.cart.presentation.order_checkout.util.PickUpTimeType.Companion.toStringResource
 import com.lihan.lazypizza.core.presentation.ArrowLeft
 import com.lihan.lazypizza.core.presentation.ChevronDown
 import com.lihan.lazypizza.core.presentation.ChevronUp
@@ -62,6 +65,7 @@ import com.lihan.lazypizza.core.presentation.ui.theme.body1Medium
 import com.lihan.lazypizza.core.presentation.ui.theme.label2Medium
 import com.lihan.lazypizza.core.presentation.ui.theme.label2SemiBold
 import com.lihan.lazypizza.core.presentation.ui.theme.outline50
+import com.lihan.lazypizza.core.presentation.ui.theme.surfaceHigher
 import com.lihan.lazypizza.core.presentation.ui.theme.textSecondary8
 import com.lihan.lazypizza.menu.presentation.MenuState
 import java.time.LocalDate
@@ -77,11 +81,24 @@ fun OrderCheckoutRoot(
     val sharedState by sharedViewModel.state.collectAsStateWithLifecycle()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    //if cart items is empty , back to cart.
+    LaunchedEffect(sharedState.items){
+        if (sharedState.items.isEmpty()){
+            onBack()
+        }
+    }
+
     OrderCheckoutScreen(
         sharedState = sharedState,
         state = state,
         onShareAction = sharedViewModel::onAction,
-        onAction = viewModel::onAction
+        onAction = { action ->
+            when(action){
+                OrderCheckoutAction.OnBackClick -> onBack()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
     )
 }
 
@@ -133,8 +150,9 @@ fun OrderCheckoutScreen(
                         },
                         navigationIcon = {
                             AppIconBackgroundButton(
+                                modifier = Modifier.padding(start = 16.dp),
                                 onClick = {
-
+                                    onAction(OrderCheckoutAction.OnBackClick)
                                 },
                                 imageVector = ArrowLeft,
                                 backgroundColor = MaterialTheme.colorScheme.textSecondary8,
@@ -150,14 +168,7 @@ fun OrderCheckoutScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         item {
-                            Text(
-                                text = stringResource(R.string.pickup_time),
-                                style = MaterialTheme.typography.label2SemiBold,
-                                color = MaterialTheme.colorScheme.secondary
-                            )
-                        }
-                        item {
-                            PickUpTime(
+                            PickUpTimeSection(
                                 pickUpTimeType = state.pickUpTimeType,
                                 onSelected = { type ->
                                     onAction(OrderCheckoutAction.OnPickupTimeTypeSelect(type))
@@ -170,12 +181,12 @@ fun OrderCheckoutScreen(
                             ) {
                                 Text(
                                     modifier = Modifier.weight(1f),
-                                    text = stringResource(R.string.earliest_pickup_time),
+                                    text = state.pickUpTimeType.toStringResource(),
                                     style = MaterialTheme.typography.label2Medium,
                                     color = MaterialTheme.colorScheme.secondary
                                 )
                                 Text(
-                                    text = "12:15",
+                                    text = state.pickUpTime?.asString()?:"",
                                     style = MaterialTheme.typography.label2SemiBold,
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
@@ -213,27 +224,33 @@ fun OrderCheckoutScreen(
                         }
                         if (state.isExpandDetail){
                             CartItemList(
-                                onDeleteClick = { cartItemId, productId -> },
-                                onPlusClick = {},
-                                onMinusClick = {},
+                                onDeleteClick = { cartItemId, productId ->
+                                    onShareAction(CartSharedAction.OnDeleteClick(cartItemId, productId))
+                                },
+                                onPlusClick = { cartItemId ->
+                                    onShareAction(CartSharedAction.OnPlusClick(cartItemId))
+                                },
+                                onMinusClick = { cartItemId ->
+                                    onShareAction(CartSharedAction.OnMinusClick(cartItemId))
+                                },
                                 items = sharedState.items
                             )
                         }
-                        item{
-                            Spacer(Modifier.height(20.dp))
-                            Text(
-                                text = stringResource(R.string.recommended_to_add_your_order),
-                                style = MaterialTheme.typography.label2SemiBold.copy(
-                                    color = MaterialTheme.colorScheme.secondary
+                        if (sharedState.recommendItems.isNotEmpty()) {
+                            item {
+                                Spacer(Modifier.height(20.dp))
+                                Text(
+                                    text = stringResource(R.string.recommended_to_add_your_order),
+                                    style = MaterialTheme.typography.label2SemiBold.copy(
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
                                 )
-                            )
-                            Spacer(Modifier.height(8.dp))
-                        }
-                        item {
-                            RecommendList(
+                                Spacer(Modifier.height(8.dp))
+                            }
+                            RecommendListRow(
                                 recommendItems = sharedState.recommendItems,
-                                onAddClick = {
-
+                                onAddClick = { productId ->
+                                    onShareAction(CartSharedAction.OnAddItemClick(productId))
                                 }
                             )
                         }
@@ -259,6 +276,9 @@ fun OrderCheckoutScreen(
                                 }
                             )
                         }
+                        item {
+                            Spacer(Modifier.height(256.dp))
+                        }
                     }
                 }
             }
@@ -266,6 +286,9 @@ fun OrderCheckoutScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceHigher
+                    )
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ){
@@ -290,7 +313,7 @@ fun OrderCheckoutScreen(
                     text = stringResource(R.string.place_order),
                     type = ButtonType.Filled,
                     onClick = {
-
+                        onShareAction(CartSharedAction.OnPlaceOrderClick)
                     }
                 )
             }
@@ -298,14 +321,13 @@ fun OrderCheckoutScreen(
             if (state.isShowDatePicker){
                 AppDatePickerRoot(
                     state = rememberAppDatePickerState(
-                        initialSelectedDate = LocalDate.now()
+                        initialSelectedDate = state.dateLocalDate
                     ),
                     onDismissRequest = {
                         onAction(OrderCheckoutAction.OnDismissDatePicker)
                     },
                     onDateConfirm = {
-                        val epochSecond = it.atStartOfDay(ZoneId.systemDefault()).toEpochSecond()
-                        onAction(OrderCheckoutAction.OnDateSelected(epochSecond))
+                        onAction(OrderCheckoutAction.OnDateSelected(it))
                     },
                     onCancel = {
                         onAction(OrderCheckoutAction.OnDatePickerCancelClick)

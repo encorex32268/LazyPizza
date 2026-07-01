@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,6 +19,23 @@ import com.lihan.lazypizza.core.presentation.ui.theme.LazyPizzaTheme
 import com.lihan.lazypizza.menu.presentation.MenuState
 import com.lihan.lazypizza.menu.presentation.model.ProductUi
 import kotlin.random.Random
+
+
+fun LazyGridScope.RecommendListRow(
+    recommendItems: List<ProductUi>,
+    onAddClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (recommendItems.isNotEmpty()) {
+        item {
+            RecommendList(
+                recommendItems = recommendItems,
+                onAddClick = onAddClick,
+                modifier = modifier
+            )
+        }
+    }
+}
 
 @Composable
 fun RecommendList(
@@ -35,7 +53,7 @@ fun RecommendList(
     ) {
         items(
             items = recommendItems,
-            key = {productUi -> productUi.id}
+            key = {productUi -> "recommend_${productUi.id}" }
         ) { productUi ->
             RecommendProductCard(
                 modifier = Modifier
